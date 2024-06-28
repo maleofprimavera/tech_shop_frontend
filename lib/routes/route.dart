@@ -45,19 +45,19 @@ class RouteGenerator {
     GetPage(name: ScreenProductDetail.tag, page: () => const ScreenProductDetail()), ///Product detail
 
     GetPage(name: ScreenOrderSummary.tag, page: () => const ScreenOrderSummary()), ///Order Summary
+    //
+    // GetPage(name: ScreenAddressManager.tag, page: () => const ScreenAddressManager()), ///Address Manage
+    //
+    // GetPage(name: ScreenAddNewAddress.tag, page: () => const ScreenAddNewAddress()), ///Add new Address
 
-    GetPage(name: ScreenAddressManager.tag, page: () => const ScreenAddressManager()), ///Address Manage
-
-    GetPage(name: ScreenAddNewAddress.tag, page: () => const ScreenAddNewAddress()), ///Add new Address
-
-    GetPage(name: ScreenPayments.tag, page: () => const ScreenPayments()), ///Payments
-
-    GetPage(name: ScreenAddCard.tag, page: () => const ScreenAddCard()), ///Add new Payment card
-
-    GetPage(name: ScreenQuickPayCards.tag, page: () => const ScreenQuickPayCards()), ///Quick Payment card
+    // GetPage(name: ScreenPayments.tag, page: () => const ScreenPayments()), ///Payments
+    //
+    // GetPage(name: ScreenAddCard.tag, page: () => const ScreenAddCard()), ///Add new Payment card
+    //
+    // GetPage(name: ScreenQuickPayCards.tag, page: () => const ScreenQuickPayCards()), ///Quick Payment card
 
     GetPage(name: ScreenOrderList.tag, page: () => const ScreenOrderList()), ///User Order list
 
-    GetPage(name: ScreenFAQ.tag, page: () => const ScreenFAQ()), ///Frequently Asked Questions
+    // GetPage(name: ScreenFAQ.tag, page: () => const ScreenFAQ()), ///Frequently Asked Questions
   ];
 }

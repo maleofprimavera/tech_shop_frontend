@@ -60,7 +60,8 @@ class CartItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        item.on_sale! ? item.sale_price.toString().toCurrencyFormat().toString() : item.price.toString().toCurrencyFormat().toString(),
+                        //on sale
+                        true ? item.salePrice.toString().toCurrencyFormat().toString() : item.price.toString().toCurrencyFormat().toString(),
                         style: primaryTextStyle(size: 14),
                       ),
                       4.width,

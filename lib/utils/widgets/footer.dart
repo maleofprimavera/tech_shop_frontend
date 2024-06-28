@@ -38,8 +38,9 @@ class Footer extends StatelessWidget {
             footerItem("Contact Us", ScreenContactUs.tag),
 
             10.width,
-            if(Get.routing.route!.settings.name != ScreenFAQ.tag)
-            footerItem("FAQ", ScreenFAQ.tag),
+            ///todo: remove for now
+            // if(Get.routing.route!.settings.name != ScreenFAQ.tag)
+            // footerItem("FAQ", ScreenFAQ.tag),
 
           ],
         ),

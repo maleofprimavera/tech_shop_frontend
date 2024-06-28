@@ -71,9 +71,9 @@ class ScreenCategoryState extends State<ScreenCategory> {
     List<String> banner = [];
 
     for (var product in categoryProducts) {
-      if (product.featured!) {
+      // if (product.featured!) {
         featured.add(product);
-      }
+      // }
       if (product.images!.isNotEmpty) {
         banner.add("${base}img/products${product.images![0].src!}");
       }
@@ -113,14 +113,14 @@ class ScreenCategoryState extends State<ScreenCategory> {
                   )
                 : Container(),
             horizontalHeading(sh_lbl_newest_product, callback: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenViewAllProduct(products: newestProducts, title: sh_lbl_newest_product)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenViewAllProduct(products: newestProducts, title: sh_lbl_newest_product)));
             }),
-            ProductHorizontalList(newestProducts),
+            // ProductHorizontalList(newestProducts),
             const SizedBox(height: spacing_standard_new),
             horizontalHeading(sh_lbl_Featured, callback: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenViewAllProduct(products: featuredProducts, title: sh_lbl_Featured)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenViewAllProduct(products: featuredProducts, title: sh_lbl_Featured)));
             }),
-            ProductHorizontalList(featuredProducts),
+            // ProductHorizontalList(featuredProducts),
             const SizedBox(height: spacing_large),
           ],
         ),

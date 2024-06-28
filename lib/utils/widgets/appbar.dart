@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../screens/screen_search_product.dart';
 import '../colors_constant.dart';
 import '../images_constant.dart';
 
@@ -46,6 +47,18 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: <Widget>[
           text("Shop", textColor: sh_textColorPrimary, fontSize: spacing_xlarge, fontFamily: fontBold),
           text("X", textColor: sh_colorPrimary, fontSize: spacing_xlarge, fontFamily: fontBold),
+            const SizedBox(width: 30,),
+
+            Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.search),
+                )).onTap(() => Get.toNamed(ScreenSearchProduct.tag)),
+
       ]),
         ):
       Text(title??'',style: boldTextStyle(size: 20)),

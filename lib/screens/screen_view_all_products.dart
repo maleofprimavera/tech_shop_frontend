@@ -15,12 +15,13 @@ import 'package:ecommerce_responsive/utils/root_bundle.dart';
 import 'package:ecommerce_responsive/utils/common_widget.dart';
 import 'package:ecommerce_responsive/main.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
+import '../models/product_response.dart';
 import 'screen_product_detail.dart';
 
 class ScreenViewAllProduct extends StatefulWidget {
   static const String tag = '/viewAllProduct';
 
-  final List<ModelProduct>? products;
+  final List<ProductResponse>? products;
   final String title;
 
   const ScreenViewAllProduct({super.key, this.products,required this.title});
@@ -33,7 +34,7 @@ class ScreenViewAllProduct extends StatefulWidget {
 
 class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
   var sortType = -1;
-  List<ModelProduct> mProductList = [];
+  List<ProductResponse> mProductList = [];
   ModelAttributes? mProductAttributeModel;
 
   var isListViewSelected = true;
@@ -103,11 +104,12 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
                           const SizedBox(height: 4),
                           Row(
                             children: <Widget>[
-                              text(mProductList[index].on_sale! ? mProductList[index].sale_price.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
+                              // on sale
+                              text(true ? mProductList[index].salePrice.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
                                   textColor: sh_colorPrimary, fontFamily: fontMedium, fontSize: textSizeNormal),
                               const SizedBox(width: spacing_control,),
                               Text(
-                                mProductList[index].regular_price.toString().toCurrencyFormat()!,
+                                mProductList[index].price.toString().toCurrencyFormat()!,
                                 style: const TextStyle(color: sh_textColorSecondary, fontFamily: fontRegular, fontSize: textSizeSmall, decoration: TextDecoration.lineThrough),
                               ),
                             ],
@@ -116,24 +118,24 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
                             child: Text(mProductList[index].description!,overflow: TextOverflow.ellipsis,maxLines: 2,),
                           ),
                           const SizedBox(height: spacing_standard,),
-                          Row(children: colorWidget(mProductList[index].attributes!)),
+                          // Row(children: colorWidget(mProductList[index].attributes!)),
                           const SizedBox(height: 4),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              RatingBar(
-                                initialRating: double.parse(mProductList[index].average_rating!),
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                tapOnlyMode: true,
-                                itemCount: 5,
-                                itemSize: 16,
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {},
-                              ),
+                              // RatingBar(
+                              //   initialRating: double.parse(mProductList[index].average_rating!),
+                              //   direction: Axis.horizontal,
+                              //   allowHalfRating: true,
+                              //   tapOnlyMode: true,
+                              //   itemCount: 5,
+                              //   itemSize: 16,
+                              //   itemBuilder: (context, _) => const Icon(
+                              //     Icons.star,
+                              //     color: Colors.amber,
+                              //   ),
+                              //   onRatingUpdate: (rating) {},
+                              // ),
                               Container(
                                 padding: const EdgeInsets.all(spacing_control),
                                 margin: const EdgeInsets.only(right: spacing_standard),
@@ -188,12 +190,13 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              mProductList[index].regular_price.toString().toCurrencyFormat()!,
+                              mProductList[index].price.toString().toCurrencyFormat()!,
                               style: secondaryTextStyle(decoration: TextDecoration. lineThrough),
                             ),
                             const SizedBox(width: spacing_control_half),
                             text(
-                              mProductList[index].on_sale! ? mProductList[index].sale_price.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
+                              //onsale
+                             true ? mProductList[index].salePrice.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
                               textColor: sh_colorPrimary,
                               fontFamily: fontMedium,
                               fontSize: textSizeMedium,

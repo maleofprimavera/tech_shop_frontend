@@ -42,7 +42,7 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
   double threeStar = 0;
   double twoStar = 0;
   double oneStar = 0;
-  List<ModelReview> list = [];
+  // List<ModelReview> list = [];
   bool autoValidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController controller = TextEditingController();
@@ -50,55 +50,55 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    // fetchData();
   }
 
-  fetchData() async {
-    var products = await loadProducts();
-    setState(() {
-      list.clear();
-      list.addAll(products);
-    });
-    setRating();
-  }
+  // fetchData() async {
+  //   var products = await loadProducts();
+  //   setState(() {
+  //     list.clear();
+  //     list.addAll(products);
+  //   });
+  //   setRating();
+  // }
 
-  Future<List<ModelReview>> loadProducts() async {
-    String jsonString = await loadContentAsset('assets/shophop_data/reviews.json');
-    final jsonResponse = json.decode(jsonString);
-    return (jsonResponse as List).map((i) => ModelReview.fromJson(i)).toList();
-  }
+  // Future<List<ModelReview>> loadProducts() async {
+  //   String jsonString = await loadContentAsset('assets/shophop_data/reviews.json');
+  //   final jsonResponse = json.decode(jsonString);
+  //   return (jsonResponse as List).map((i) => ModelReview.fromJson(i)).toList();
+  // }
 
-  setRating() {
-    fiveStar = 0;
-    fourStar = 0;
-    threeStar = 0;
-    twoStar = 0;
-    oneStar = 0;
-    for (var review in list) {
-      switch (review.rating) {
-        case 5:
-          fiveStar++;
-          break;
-        case 4:
-          fourStar++;
-          break;
-        case 3:
-          threeStar++;
-          break;
-        case 2:
-          twoStar++;
-          break;
-        case 1:
-          oneStar++;
-          break;
-      }
-    }
-    fiveStar = (fiveStar * 100) / list.length;
-    fourStar = (fourStar * 100) / list.length;
-    threeStar = (threeStar * 100) / list.length;
-    twoStar = (twoStar * 100) / list.length;
-    oneStar = (oneStar * 100) / list.length;
-  }
+  // setRating() {
+  //   fiveStar = 0;
+  //   fourStar = 0;
+  //   threeStar = 0;
+  //   twoStar = 0;
+  //   oneStar = 0;
+  //   for (var review in list) {
+  //     switch (review.rating) {
+  //       case 5:
+  //         fiveStar++;
+  //         break;
+  //       case 4:
+  //         fourStar++;
+  //         break;
+  //       case 3:
+  //         threeStar++;
+  //         break;
+  //       case 2:
+  //         twoStar++;
+  //         break;
+  //       case 1:
+  //         oneStar++;
+  //         break;
+  //     }
+  //   }
+  //   fiveStar = (fiveStar * 100) / list.length;
+  //   fourStar = (fourStar * 100) / list.length;
+  //   threeStar = (threeStar * 100) / list.length;
+  //   twoStar = (twoStar * 100) / list.length;
+  //   oneStar = (oneStar * 100) / list.length;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +128,8 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
             children: [
               Text(product.name!, style: boldTextStyle(size: 18)),
               text(
-                product.on_sale! ? product.sale_price.toCurrencyFormat() : product.price.toCurrencyFormat(),
+                // onsale
+                true ? product.salePrice.toCurrencyFormat() : product.price.toCurrencyFormat(),
                 textColor: sh_colorPrimary,
                 fontSize: textSizeXNormal,
                 fontFamily: fontMedium,
@@ -139,33 +140,33 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 0, bottom: 0),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
-                        color: double.parse(product.average_rating!) < 2
-                            ? Colors.red
-                            : double.parse(product.average_rating!) < 4
-                            ? Colors.orange
-                            : Colors.green,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Text("3.0", style: boldTextStyle(color: sh_white)),
-                          2.width,
-                          const Icon(Icons.star, color: sh_white, size: 12),
-                        ],
-                      ),
-                    ),
-                    8.width,
-                    text("${list.length} Reviewer")
-                  ],
-                ),
-              ),
+              // Expanded(
+              //   child: Row(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget>[
+              //       Container(
+              //         padding: const EdgeInsets.only(left: 12, right: 12, top: 0, bottom: 0),
+              //         decoration: BoxDecoration(
+              //           borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
+              //           color: double.parse(product.average_rating!) < 2
+              //               ? Colors.red
+              //               : double.parse(product.average_rating!) < 4
+              //               ? Colors.orange
+              //               : Colors.green,
+              //         ),
+              //         child: Row(
+              //           children: <Widget>[
+              //             Text("3.0", style: boldTextStyle(color: sh_white)),
+              //             2.width,
+              //             const Icon(Icons.star, color: sh_white, size: 12),
+              //           ],
+              //         ),
+              //       ),
+              //       8.width,
+              //       text("${list.length} Reviewer")
+              //     ],
+              //   ),
+              // ),
               Text(
                 product.regular_price.toString().toCurrencyFormat()!,
                 style: primaryTextStyle(color: sh_textColorSecondary,decoration: TextDecoration.lineThrough),
@@ -176,189 +177,189 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
       ),
     );
 
-    var colorList = [];
-    for (var element in product.attributes!) {
-        if (element.name == 'Color') colorList.addAll(element.options!);
-      }
+    // var colorList = [];
+    // for (var element in product.colors!) {
+    //     if (element.name == 'Color') colorList.addAll(element.options!);
+    //   }
 
-    var colors = ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: colorList.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            selectedColor = index;
-            setState(() {});
-          },
-          child: Container(
-            padding: const EdgeInsets.all(7),
-            margin: const EdgeInsets.only(right: spacing_xlarge),
-            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: sh_textColorPrimary, width: 0.5), color: getColorFromHex(colorList[index])),
-            child: selectedColor == index ? const Icon(Icons.done, color: sh_white, size: 12) : Container(),
-          ),
-        );
-      },
-    );
+    // var colors = ListView.builder(
+    //   scrollDirection: Axis.horizontal,
+    //   itemCount: 0,
+    //   shrinkWrap: true,
+    //   itemBuilder: (context, index) {
+    //     return GestureDetector(
+    //       onTap: () {
+    //         selectedColor = index;
+    //         setState(() {});
+    //       },
+    //       child: Container(
+    //         padding: const EdgeInsets.all(7),
+    //         margin: const EdgeInsets.only(right: spacing_xlarge),
+    //         decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: sh_textColorPrimary, width: 0.5), color: getColorFromHex(colorList[index])),
+    //         child: selectedColor == index ? const Icon(Icons.done, color: sh_white, size: 12) : Container(),
+    //       ),
+    //     );
+    //   },
+    // );
 
-    var sizeList = [];
-    product.attributes!.forEach((element) {
-      if (element.name == 'Size') sizeList.addAll(element.options!);
-    });
+    // var sizeList = [];
+    // product.attributes!.forEach((element) {
+    //   if (element.name == 'Size') sizeList.addAll(element.options!);
+    // });
+    //
+    // var brandList = [];
+    // product.attributes!.forEach((element) {
+    //   if (element.name == 'Brand') brandList.addAll(element.options!);
+    // });
+    //
+    // var bands = "";
+    // brandList.forEach((brand) {
+    //   bands = "$bands$brand, ";
+    // });
 
-    var brandList = [];
-    product.attributes!.forEach((element) {
-      if (element.name == 'Brand') brandList.addAll(element.options!);
-    });
+    // var sizes = ListView.builder(
+    //   scrollDirection: Axis.horizontal,
+    //   itemCount: sizeList.length,
+    //   shrinkWrap: true,
+    //   itemBuilder: (context, index) {
+    //     return GestureDetector(
+    //       onTap: () {
+    //         selectedSize = index;
+    //         setState(() {});
+    //       },
+    //       child: Container(
+    //         width: 30,
+    //         height: 30,
+    //         margin: const EdgeInsets.only(right: spacing_xlarge),
+    //         decoration: selectedSize == index
+    //             ? BoxDecoration(
+    //           shape: BoxShape.circle,
+    //           border: Border.all(color: sh_textColorPrimary, width: 0.5),
+    //           color: sh_colorPrimary,
+    //         )
+    //             : const BoxDecoration(),
+    //         child: Center(
+    //           child: Text(
+    //             sizeList[index],
+    //             style: primaryTextStyle(
+    //               color: selectedSize == index
+    //                   ? sh_white
+    //                   : appStore.isDarkModeOn
+    //                   ? white
+    //                   : sh_textColorPrimary,
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
+    //
+    // Widget colorSizeWidget = Wrap(
+    //   children: [
+    //
+    //     Card(
+    //       child: Container(
+    //         width: width < 516? (width-20): width * 0.48,
+    //         constraints: const BoxConstraints(minWidth: 250),
+    //         padding: const EdgeInsets.all(20),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             Text(sh_lbl_colors, style: boldTextStyle()),
+    //             SizedBox(height: 30, child: colors),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //
+    //     sizeList.isNotEmpty ?
+    //     Card(
+    //       child: Container(
+    //         width: width < 516? (width-20): width * 0.48,
+    //         constraints: const BoxConstraints(minWidth: 250),
+    //         padding: const EdgeInsets.all(20),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             Text(sh_lbl_size, style: boldTextStyle()),
+    //             SizedBox(height: 30, child: sizes)
+    //           ],
+    //         ),
+    //       ),
+    //     ) : const SizedBox(),
+    //   ],
+    // );
 
-    var bands = "";
-    brandList.forEach((brand) {
-      bands = "$bands$brand, ";
-    });
-
-    var sizes = ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: sizeList.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            selectedSize = index;
-            setState(() {});
-          },
-          child: Container(
-            width: 30,
-            height: 30,
-            margin: const EdgeInsets.only(right: spacing_xlarge),
-            decoration: selectedSize == index
-                ? BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: sh_textColorPrimary, width: 0.5),
-              color: sh_colorPrimary,
-            )
-                : const BoxDecoration(),
-            child: Center(
-              child: Text(
-                sizeList[index],
-                style: primaryTextStyle(
-                  color: selectedSize == index
-                      ? sh_white
-                      : appStore.isDarkModeOn
-                      ? white
-                      : sh_textColorPrimary,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    Widget colorSizeWidget = Wrap(
-      children: [
-
-        Card(
-          child: Container(
-            width: width < 516? (width-20): width * 0.48,
-            constraints: const BoxConstraints(minWidth: 250),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(sh_lbl_colors, style: boldTextStyle()),
-                SizedBox(height: 30, child: colors),
-              ],
-            ),
-          ),
-        ),
-
-        sizeList.isNotEmpty ?
-        Card(
-          child: Container(
-            width: width < 516? (width-20): width * 0.48,
-            constraints: const BoxConstraints(minWidth: 250),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(sh_lbl_size, style: boldTextStyle()),
-                SizedBox(height: 30, child: sizes)
-              ],
-            ),
-          ),
-        ) : const SizedBox(),
-      ],
-    );
-
-    var reviews = ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: list.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: spacing_standard_new),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(left: 12, right: 12, top: 1, bottom: 1),
-                    decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
-                        color: list[index].rating! < 2
-                            ? Colors.red
-                            : list[index].rating! < 4
-                            ? Colors.orange
-                            : Colors.green),
-                    child: Row(
-                      children: <Widget>[
-                        text(list[index].rating.toString(), textColor: sh_white),
-                        const SizedBox(width: spacing_control_half),
-                        const Icon(Icons.star, color: sh_white, size: 12),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: spacing_standard_new),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(list[index].name!, style: boldTextStyle()),
-                        Text(list[index].review!, style: secondaryTextStyle()),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              8.height,
-              Image.asset("${base}img/products${product.images![0].src!}", width: 90, height: 110, fit: BoxFit.fill),
-              8.height,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        margin: const EdgeInsets.only(right: spacing_standard),
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: list[index].verified! ? Colors.green : Colors.grey.withOpacity(0.5)),
-                        child: Icon(list[index].verified! ? Icons.done : Icons.clear, color: sh_white, size: 14),
-                      ),
-                      Text(list[index].verified! ? sh_lbl_verified : sh_lbl_not_verified, style: primaryTextStyle())
-                    ],
-                  ),
-                  text("26 June 2019", fontSize: textSizeMedium)
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
+    // var reviews = ListView.builder(
+    //   scrollDirection: Axis.vertical,
+    //   itemCount: list.length,
+    //   shrinkWrap: true,
+    //   physics: const NeverScrollableScrollPhysics(),
+    //   itemBuilder: (context, index) {
+    //     return Container(
+    //       margin: const EdgeInsets.only(bottom: spacing_standard_new),
+    //       child: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: <Widget>[
+    //           Row(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: <Widget>[
+    //               Container(
+    //                 padding: const EdgeInsets.only(left: 12, right: 12, top: 1, bottom: 1),
+    //                 decoration: BoxDecoration(
+    //                     borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
+    //                     color: list[index].rating! < 2
+    //                         ? Colors.red
+    //                         : list[index].rating! < 4
+    //                         ? Colors.orange
+    //                         : Colors.green),
+    //                 child: Row(
+    //                   children: <Widget>[
+    //                     text(list[index].rating.toString(), textColor: sh_white),
+    //                     const SizedBox(width: spacing_control_half),
+    //                     const Icon(Icons.star, color: sh_white, size: 12),
+    //                   ],
+    //                 ),
+    //               ),
+    //               const SizedBox(width: spacing_standard_new),
+    //               Expanded(
+    //                 child: Column(
+    //                   mainAxisAlignment: MainAxisAlignment.start,
+    //                   crossAxisAlignment: CrossAxisAlignment.start,
+    //                   children: [
+    //                     Text(list[index].name!, style: boldTextStyle()),
+    //                     Text(list[index].review!, style: secondaryTextStyle()),
+    //                   ],
+    //                 ),
+    //               )
+    //             ],
+    //           ),
+    //           8.height,
+    //           Image.asset("${base}img/products${product.images![0].src!}", width: 90, height: 110, fit: BoxFit.fill),
+    //           8.height,
+    //           Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               Row(
+    //                 children: [
+    //                   Container(
+    //                     padding: const EdgeInsets.all(4),
+    //                     margin: const EdgeInsets.only(right: spacing_standard),
+    //                     decoration: BoxDecoration(shape: BoxShape.circle, color: list[index].verified! ? Colors.green : Colors.grey.withOpacity(0.5)),
+    //                     child: Icon(list[index].verified! ? Icons.done : Icons.clear, color: sh_white, size: 14),
+    //                   ),
+    //                   Text(list[index].verified! ? sh_lbl_verified : sh_lbl_not_verified, style: primaryTextStyle())
+    //                 ],
+    //               ),
+    //               text("26 June 2019", fontSize: textSizeMedium)
+    //             ],
+    //           )
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
 
     var descriptionTab = SingleChildScrollView(
       child: Container(
@@ -423,167 +424,167 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
         ),
       ),
     );
-    var moreInfoTab = SingleChildScrollView(
-      child: Container(
-        margin: const EdgeInsets.only(left: 16, top: 20, right: 16),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: spacing_control, bottom: spacing_control),
-                      color: context.cardColor,
-                      child: Text(sh_lbl_length, style: primaryTextStyle())),
-                ),
-                Expanded(
-                  child: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: spacing_control, bottom: spacing_control, left: spacing_large),
-                      color: context.cardColor,
-                      child: Text("${product.dimensions!.length!} cm", style: primaryTextStyle())),
-                )
-              ],
-            ),
-            8.height,
-            Row(
-              children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
-                    color: context.cardColor,
-                    child: Text(sh_lbl_height, style: primaryTextStyle()))
-                    .expand(),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
-                    color: context.cardColor,
-                    child: Text("${product.dimensions!.height!} cm", style: primaryTextStyle()))
-                    .expand()
-              ],
-            ),
-            8.height,
-            Row(
-              children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
-                    color: context.cardColor,
-                    child: Text(sh_lbl_width, style: primaryTextStyle()))
-                    .expand(),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
-                    color: context.cardColor,
-                    child: Text("${product.dimensions!.width!} cm", style: primaryTextStyle()))
-                    .expand()
-              ],
-            ),
-            8.height,
-            IntrinsicHeight(
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
-                      color: context.cardColor,
-                      child: Text(sh_lbl_brand, style: primaryTextStyle()))
-                      .expand(),
-                  Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
-                      color: context.cardColor,
-                      child: Text(bands, style: primaryTextStyle()))
-                      .expand()
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    var reviewsTab = SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 60),
-      child: Container(
-        margin: const EdgeInsets.only(left: 16, top: 20, right: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.all(spacing_standard_new),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    height: width * 0.33,
-                    width: width * 0.33,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.withOpacity(0.1)),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        reviewText("3.0", size: 28.0, fontSize: 30.0, fontFamily: fontBold),
-                        text("${list.length} Reviews", fontSize: textSizeMedium),
-                      ],
-                    ),
-                  ),
-                  16.width,
-                  Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[reviewText(5), ratingProgress(fiveStar, Colors.green)],
-                      ),
-                      const SizedBox(
-                        height: spacing_control_half,
-                      ),
-                      Row(
-                        children: <Widget>[reviewText(4), ratingProgress(fourStar, Colors.green)],
-                      ),
-                      const SizedBox(
-                        height: spacing_control_half,
-                      ),
-                      Row(
-                        children: <Widget>[reviewText(3), ratingProgress(threeStar, Colors.amber)],
-                      ),
-                      const SizedBox(
-                        height: spacing_control_half,
-                      ),
-                      Row(
-                        children: <Widget>[reviewText(2), ratingProgress(twoStar, Colors.amber)],
-                      ),
-                      const SizedBox(
-                        height: spacing_control_half,
-                      ),
-                      Row(
-                        children: <Widget>[reviewText(1), ratingProgress(oneStar, Colors.red)],
-                      )
-                    ],
-                  ).expand()
-                ],
-              ),
-            ),
-            16.height,
-            const Divider(height: 1),
-            16.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(sh_lbl_reviews, style: boldTextStyle()),
-                RoundedButton(
-                  title: sh_lbl_rate_now,
-                    onPress: ()=>showRatingDialog(context))
-              ],
-            ),
-            reviews
-          ],
-        ),
-      ),
-    );
+    // var moreInfoTab = SingleChildScrollView(
+    //   child: Container(
+    //     margin: const EdgeInsets.only(left: 16, top: 20, right: 16),
+    //     child: Column(
+    //       children: <Widget>[
+    //         Row(
+    //           children: <Widget>[
+    //             Expanded(
+    //               child: Container(
+    //                   alignment: Alignment.center,
+    //                   padding: const EdgeInsets.only(top: spacing_control, bottom: spacing_control),
+    //                   color: context.cardColor,
+    //                   child: Text(sh_lbl_length, style: primaryTextStyle())),
+    //             ),
+    //             // Expanded(
+    //             //   child: Container(
+    //             //       alignment: Alignment.centerLeft,
+    //             //       padding: const EdgeInsets.only(top: spacing_control, bottom: spacing_control, left: spacing_large),
+    //             //       color: context.cardColor,
+    //             //       child: Text("${product.dimensions!.length!} cm", style: primaryTextStyle())),
+    //             // )
+    //           ],
+    //         ),
+    //         8.height,
+    //         // Row(
+    //         //   children: <Widget>[
+    //         //     Container(
+    //         //         alignment: Alignment.center,
+    //         //         padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
+    //         //         color: context.cardColor,
+    //         //         child: Text(sh_lbl_height, style: primaryTextStyle()))
+    //         //         .expand(),
+    //         //     Container(
+    //         //         alignment: Alignment.centerLeft,
+    //         //         padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
+    //         //         color: context.cardColor,
+    //         //         child: Text("${product.dimensions!.height!} cm", style: primaryTextStyle()))
+    //         //         .expand()
+    //         //   ],
+    //         // ),
+    //         8.height,
+    //         // Row(
+    //         //   children: <Widget>[
+    //         //     Container(
+    //         //         alignment: Alignment.center,
+    //         //         padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
+    //         //         color: context.cardColor,
+    //         //         child: Text(sh_lbl_width, style: primaryTextStyle()))
+    //         //         .expand(),
+    //         //     Container(
+    //         //         alignment: Alignment.centerLeft,
+    //         //         padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
+    //         //         color: context.cardColor,
+    //         //         child: Text("${product.dimensions!.width!} cm", style: primaryTextStyle()))
+    //         //         .expand()
+    //         //   ],
+    //         // ),
+    //         8.height,
+    //         IntrinsicHeight(
+    //           child: Row(
+    //             mainAxisSize: MainAxisSize.max,
+    //             crossAxisAlignment: CrossAxisAlignment.stretch,
+    //             children: <Widget>[
+    //               Container(
+    //                   alignment: Alignment.center,
+    //                   padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard),
+    //                   color: context.cardColor,
+    //                   child: Text(sh_lbl_brand, style: primaryTextStyle()))
+    //                   .expand(),
+    //               // Container(
+    //               //     alignment: Alignment.centerLeft,
+    //               //     padding: const EdgeInsets.only(top: spacing_standard, bottom: spacing_standard, left: spacing_large),
+    //               //     color: context.cardColor,
+    //               //     child: Text(bands, style: primaryTextStyle()))
+    //               //     .expand()
+    //             ],
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+    // var reviewsTab = SingleChildScrollView(
+    //   padding: const EdgeInsets.only(bottom: 60),
+    //   child: Container(
+    //     margin: const EdgeInsets.only(left: 16, top: 20, right: 16),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: <Widget>[
+    //         // Container(
+    //         //   margin: const EdgeInsets.all(spacing_standard_new),
+    //         //   child: Row(
+    //         //     crossAxisAlignment: CrossAxisAlignment.start,
+    //         //     mainAxisAlignment: MainAxisAlignment.start,
+    //         //     children: <Widget>[
+    //         //       Container(
+    //         //         height: width * 0.33,
+    //         //         width: width * 0.33,
+    //         //         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.withOpacity(0.1)),
+    //         //         child: Column(
+    //         //           mainAxisSize: MainAxisSize.max,
+    //         //           mainAxisAlignment: MainAxisAlignment.center,
+    //         //           crossAxisAlignment: CrossAxisAlignment.center,
+    //         //           children: <Widget>[
+    //         //             reviewText("3.0", size: 28.0, fontSize: 30.0, fontFamily: fontBold),
+    //         //             text("${list.length} Reviews", fontSize: textSizeMedium),
+    //         //           ],
+    //         //         ),
+    //         //       ),
+    //         //       16.width,
+    //         //       Column(
+    //         //         children: <Widget>[
+    //         //           Row(
+    //         //             children: <Widget>[reviewText(5), ratingProgress(fiveStar, Colors.green)],
+    //         //           ),
+    //         //           const SizedBox(
+    //         //             height: spacing_control_half,
+    //         //           ),
+    //         //           Row(
+    //         //             children: <Widget>[reviewText(4), ratingProgress(fourStar, Colors.green)],
+    //         //           ),
+    //         //           const SizedBox(
+    //         //             height: spacing_control_half,
+    //         //           ),
+    //         //           Row(
+    //         //             children: <Widget>[reviewText(3), ratingProgress(threeStar, Colors.amber)],
+    //         //           ),
+    //         //           const SizedBox(
+    //         //             height: spacing_control_half,
+    //         //           ),
+    //         //           Row(
+    //         //             children: <Widget>[reviewText(2), ratingProgress(twoStar, Colors.amber)],
+    //         //           ),
+    //         //           const SizedBox(
+    //         //             height: spacing_control_half,
+    //         //           ),
+    //         //           Row(
+    //         //             children: <Widget>[reviewText(1), ratingProgress(oneStar, Colors.red)],
+    //         //           )
+    //         //         ],
+    //         //       ).expand()
+    //         //     ],
+    //         //   ),
+    //         // ),
+    //         16.height,
+    //         const Divider(height: 1),
+    //         16.height,
+    //         Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: <Widget>[
+    //             Text(sh_lbl_reviews, style: boldTextStyle()),
+    //             RoundedButton(
+    //               title: sh_lbl_rate_now,
+    //                 onPress: ()=>showRatingDialog(context))
+    //           ],
+    //         ),
+    //         reviews
+    //       ],
+    //     ),
+    //   ),
+    // );
     var bottomButtons = Container(
       height: 50,
       decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.7), blurRadius: 16, spreadRadius: 2, offset: const Offset(3, 1))], color: sh_white),
@@ -637,7 +638,7 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                     children: <Widget>[
                       sliderImages,
                       productInfo,
-                      colorSizeWidget
+                      // colorSizeWidget
                     ],
                   ),
                 ),
@@ -663,8 +664,8 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
         body: TabBarView(
           children: [
             descriptionTab,
-            moreInfoTab,
-            reviewsTab,
+            // moreInfoTab,
+            // reviewsTab,
           ],
         ),
       ),
@@ -698,9 +699,9 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                       child: Column(
                         children: [
                           descriptionTab,
-                          colorSizeWidget,
-                          moreInfoTab,
-                          reviewsTab,
+                          // colorSizeWidget,
+                          // moreInfoTab,
+                          // reviewsTab,
                         ],
                       ),
                     )

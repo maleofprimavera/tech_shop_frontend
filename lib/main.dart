@@ -1,7 +1,9 @@
+import 'package:ecommerce_responsive/api/product_api_impl.dart';
 import 'package:ecommerce_responsive/routes/route.dart';
 import 'package:ecommerce_responsive/screens/screen_splash.dart';
 import 'package:ecommerce_responsive/utils/scroll_behaviour.dart';
 import 'package:ecommerce_responsive/utils/themes/AppTheme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +12,8 @@ import 'app_store/app_store.dart';
 AppStore appStore = AppStore();
 
 void main() {
+  ApiIpml apiIpml = ApiIpml();
+  apiIpml.initializeApi();
   runApp(const MyApp());
 }
 
@@ -21,10 +25,11 @@ class MyApp extends StatelessWidget {
     return  GetMaterialApp(
       title: 'ShopX',
       scrollBehavior: AppScrollBehavior(),
-      theme: !appStore.isDarkModeOn ? AppThemeData.lightTheme : AppThemeData.darkTheme,
+      theme: AppThemeData.lightTheme.copyWith(pageTransitionsTheme: PageTransitionsTheme(builders:<TargetPlatform, PageTransitionsBuilder>{TargetPlatform.windows: CupertinoPageTransitionsBuilder()})),
       debugShowCheckedModeBanner: false,
       initialRoute: ScreenSplash.tag,
       getPages: RouteGenerator.routes,
+
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:core';
 import 'package:flutter/services.dart';
 import '../models/model_address.dart';
 import '../models/model_attribute.dart';
@@ -35,11 +35,11 @@ Future<ModelAttributes> loadAttributes() async {
   return ModelAttributes.fromJson(jsonResponse);
 }
 
-Future<List<ModelAddress>> loadAddresses() async {
-  String jsonString = await loadContentAsset('assets/shophop_data/address.json');
-  final jsonResponse = json.decode(jsonString);
-  return (jsonResponse as List).map((i) => ModelAddress.fromJson(i)).toList();
-}
+// Future<List<ModelAddress>> loadAddresses() async {
+//   String jsonString = await loadContentAsset('assets/shophop_data/address.json');
+//   final jsonResponse = json.decode(jsonString);
+//   return (jsonResponse as List).map((i) => ModelAddress.fromJson(i)).toList();
+// }
 
 Future<List<ModelOrder>> loadOrders() async {
   String jsonString = await loadContentAsset('assets/shophop_data/orders.json');

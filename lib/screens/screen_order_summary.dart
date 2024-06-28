@@ -27,7 +27,7 @@ class ScreenOrderSummary extends StatefulWidget {
 
 class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
   List<ModelProduct> orderList = [];
-  List<ModelAddress> addressList = [];
+  // List<ModelAddress> addressList = [];
   var selectedPosition = 0;
   var currentIndex = 0;
   var isLoaded = false;
@@ -40,13 +40,13 @@ class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
 
   fetchData() async {
     var products = await loadCartProducts();
-    var addresses = await loadAddresses();
+    // var addresses = await loadAddresses();
 
     setState(() {
       orderList.clear();
       orderList.addAll(products);
-      addressList.clear();
-      addressList.addAll(addresses);
+      // addressList.clear();
+      // addressList.addAll(addresses);
       isLoaded = true;
     });
   }
@@ -69,42 +69,44 @@ class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
         )
         : Container();
 
-    var address = addressList.isNotEmpty?
-    Card(
-      child: Container(
-        width: double.infinity,
-        constraints: const BoxConstraints(maxWidth: 480),
-        padding: const EdgeInsets.all(spacing_standard_new),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("${addressList[selectedPosition].first_name!} ${addressList[selectedPosition].last_name!}", style: boldTextStyle(size: 18),),
-            4.height,
-            Text(addressList[selectedPosition].address.toString(), style: primaryTextStyle()),
-            Text("${addressList[selectedPosition].city!},${addressList[selectedPosition].state!}", style: secondaryTextStyle()),
-            Text("${addressList[selectedPosition].country!},${addressList[selectedPosition].pinCode!}", style: secondaryTextStyle()),
-            16.height,
-            Text(addressList[selectedPosition].phone_number.toString(), style: secondaryTextStyle()),
-            16.height,
-            SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: RoundedButton(
-                title: sh_lbl_change_address,
-                  color: sh_colorPrimary,
-                  titleColor: sh_white,
-                  onPress:() async {
-                    var pos = await Get.toNamed(ScreenAddressManager.tag) ?? selectedPosition;
-                    setState(() {
-                      selectedPosition = pos;
-                    });
-                  },
-              )
-            )
-          ],
-        ),
-      ),
-    ): const SizedBox.shrink();
+    ///todo: remove address box for now
+    // var address = addressList.isNotEmpty?
+    // Card(
+    //   child: Container(
+    //     width: double.infinity,
+    //     constraints: const BoxConstraints(maxWidth: 480),
+    //     padding: const EdgeInsets.all(spacing_standard_new),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: <Widget>[
+    //         Text("${addressList[selectedPosition].first_name!} ${addressList[selectedPosition].last_name!}", style: boldTextStyle(size: 18),),
+    //         4.height,
+    //         Text(addressList[selectedPosition].address.toString(), style: primaryTextStyle()),
+    //         Text("${addressList[selectedPosition].city!},${addressList[selectedPosition].state!}", style: secondaryTextStyle()),
+    //         Text("${addressList[selectedPosition].country!},${addressList[selectedPosition].pinCode!}", style: secondaryTextStyle()),
+    //         16.height,
+    //         Text(addressList[selectedPosition].phone_number.toString(), style: secondaryTextStyle()),
+    //         16.height,
+    //         SizedBox(
+    //           width: double.infinity,
+    //           height: 45,
+    //           child: RoundedButton(
+    //             title: sh_lbl_change_address,
+    //               color: sh_colorPrimary,
+    //               titleColor: sh_white,
+    //               onPress:() async {
+    //               ///todo: remove this feature for now
+    //                 // // var pos = await Get.toNamed(ScreenAddressManager.tag) ?? selectedPosition;
+    //                 // setState(() {
+    //                 //   selectedPosition = pos;
+    //                 // });
+    //               },
+    //           )
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // ): const SizedBox.shrink();
     var bottomButtons = Container(
       height: 60,
       decoration: const BoxDecoration(boxShadow: [BoxShadow(color: sh_shadow_color, blurRadius: 10, spreadRadius: 2, offset: Offset(0, 3))], color: sh_white),
@@ -128,7 +130,8 @@ class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
             height: double.infinity,
             child: text(sh_lbl_continue, textColor: sh_white, fontSize: textSizeLargeMedium, fontFamily: fontMedium),
           ).onTap(() {
-            Get.toNamed(ScreenPayments.tag);
+            ///todo: remove for now
+            // Get.toNamed(ScreenPayments.tag);
           }).expand()
         ],
       ),
@@ -144,13 +147,13 @@ class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
                 padding: const EdgeInsets.only(bottom: 70.0),
                 child: Column(
                   children: <Widget>[
-                    isLoaded && !context.isDesktop()? address : const SizedBox.shrink(),
-                    Wrap(
-                      children: [
-                        cartList,
-                        isLoaded && context.isDesktop()? address : const SizedBox.shrink(),
-                      ],
-                    ),
+                    // isLoaded && !context.isDesktop()? address : const SizedBox.shrink(),
+                    // Wrap(
+                    //   children: [
+                    //     cartList,
+                    //     isLoaded && context.isDesktop()? address : const SizedBox.shrink(),
+                    //   ],
+                    // ),
                     ScreenCartState.paymentDetail,
                   ],
                 ),

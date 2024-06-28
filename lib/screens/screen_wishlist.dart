@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
 import 'package:ecommerce_responsive/utils/widgets/footer.dart';

@@ -141,7 +141,8 @@ class ScreenAccountState extends State<ScreenAccount> {
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Column(
                                 children: [
-                                  getRowItem(sh_lbl_address_manager, callback: () => Get.toNamed(ScreenAddressManager.tag)),
+                                  ///todo: remove address feature for now
+                                  // getRowItem(sh_lbl_address_manager, callback: () => Get.toNamed(ScreenAddressManager.tag)),
                                   const SizedBox(height: spacing_standard_new),
                                   getRowItem(sh_lbl_my_order, callback: () => Get.toNamed(ScreenOrderList.tag)),
                                   const SizedBox(height: spacing_standard_new),
@@ -156,8 +157,11 @@ class ScreenAccountState extends State<ScreenAccount> {
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Column(
                                 children: [
-
-                                  getRowItem(sh_lbl_quick_pay_cards, callback: ()=> Get.toNamed(ScreenQuickPayCards.tag)),
+                                  ///todo: remove for quickcard for now
+                                  //
+                                  // getRowItem(sh_lbl_quick_pay_cards, callback: ()=> {}
+                                  //   // {Get.toNamed(ScreenQuickPayCards.tag);}
+                                  // ),
                                   const SizedBox(height: spacing_standard_new),
                                   getRowItem(sh_lbl_help_center, callback: () => Fluttertoast.showToast(msg: "Under Development") ),
                                   const SizedBox(height: spacing_standard_new),

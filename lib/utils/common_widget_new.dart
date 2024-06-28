@@ -4,6 +4,8 @@ import 'package:ecommerce_responsive/screens/screen_cart.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
 import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
+import 'package:ecommerce_responsive/utils/size_constant.dart';
+import 'package:ecommerce_responsive/utils/strings_constant.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,10 +13,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ecommerce_responsive/screens/screen_product_detail.dart';
 import 'package:ecommerce_responsive/utils/images_constant.dart';
-
 import '../models/product_response.dart';
-import 'size_constant.dart';
-import 'strings_constant.dart';
 
 var textFiledBorderStyle = OutlineInputBorder(
     borderRadius: BorderRadius.circular(32.0),
@@ -31,11 +30,11 @@ InputDecoration formFieldDecoration(String hintText) {
 }
 
 // ignore: must_be_immutable
-class ProductHorizontalList extends StatelessWidget {
+class ProductHorizontalListV2 extends StatelessWidget {
   List<ProductResponse> productList = [];
   var isHorizontal = false;
 
-  ProductHorizontalList(this.productList,
+  ProductHorizontalListV2(this.productList,
       {super.key, this.isHorizontal = false});
 
   @override
@@ -64,18 +63,18 @@ class ProductHorizontalList extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Image.network(
-                          productList[index].images![0].src!,
-                          height: 200,
-                          fit: BoxFit.cover),
+                      Image.network(productList[index].images![0].src!,
+                          height: 200, fit: BoxFit.contain),
                       const SizedBox(height: spacing_standard),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          Text(productList[index].name!,
-                                  maxLines: 2, style: boldTextStyle())
-                              .expand(),
+                          Expanded(
+                            child: Text(productList[index].name!,
+                                maxLines: 2,
+                                style: boldTextStyle().copyWith(fontSize: 13)),
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -85,7 +84,8 @@ class ProductHorizontalList extends StatelessWidget {
                                     .toString()
                                     .toCurrencyFormat()!,
                                 style: secondaryTextStyle(
-                                    decoration: TextDecoration.lineThrough),
+                                    decoration: TextDecoration.lineThrough).copyWith(fontSize: 13),
+                                softWrap: true,
                               ),
                               const SizedBox(width: spacing_control_half),
                               text(
@@ -124,7 +124,7 @@ Widget divider() {
   );
 }
 
-Widget horizontalHeading(var title, {bool showViewAll = true, var callback}) {
+Widget horizontalHeadingV2(var title, {bool showViewAll = true, var callback}) {
   return Padding(
     padding: const EdgeInsets.only(
       left: spacing_standard_new,

@@ -96,8 +96,10 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                           const SizedBox(height: 4),
                           Row(
                             children: <Widget>[
-                              text(resultList[index].on_sale! ? resultList[index]
-                                  .sale_price.toString()
+                              // onsale
+                              text(
+                                  true ? resultList[index]
+                                  .salePrice.toString()
                                   .toCurrencyFormat() : resultList[index].price
                                   .toString().toCurrencyFormat(),
                                   textColor: sh_colorPrimary,
@@ -119,7 +121,7 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
 
                           const SizedBox(height: spacing_standard,),
 
-                          Row(children: colorWidget(resultList[index].attributes!)),
+                          // Row(children: colorWidget(resultList[index].attributes!)),
 
                           const SizedBox(height: 4),
 
@@ -130,21 +132,21 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              RatingBar(
-                                initialRating: double.parse(
-                                    resultList[index].average_rating!),
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                tapOnlyMode: true,
-                                itemCount: 5,
-                                itemSize: 16,
-                                itemBuilder: (context, _) =>
-                                const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {},
-                              ),
+                              // RatingBar(
+                              //   initialRating: double.parse(
+                              //       resultList[index].average_rating!),
+                              //   direction: Axis.horizontal,
+                              //   allowHalfRating: true,
+                              //   tapOnlyMode: true,
+                              //   itemCount: 5,
+                              //   itemSize: 16,
+                              //   itemBuilder: (context, _) =>
+                              //   const Icon(
+                              //     Icons.star,
+                              //     color: Colors.amber,
+                              //   ),
+                              //   onRatingUpdate: (rating) {},
+                              // ),
                               Container(
                                 padding: const EdgeInsets.all(spacing_control),
                                 margin: const EdgeInsets.only(right: spacing_standard),

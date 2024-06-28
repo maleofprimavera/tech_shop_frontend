@@ -128,10 +128,11 @@ class _SideDrawerState extends State<SideDrawer> {
                     }*/
                 }),
                 const SizedBox(height: 20),
-                getDrawerItem(null, sh_lbl_faq, callback: () {
-                  Navigator.of(context).pop();
-                  Get.toNamed(ScreenFAQ.tag);
-                }),
+                ///todo: remove for now
+                // getDrawerItem(null, sh_lbl_faq, callback: () {
+                //   Navigator.of(context).pop();
+                //   Get.toNamed(ScreenFAQ.tag);
+                // }),
                 getDrawerItem(null, sh_lbl_contact_us, callback: () {
                   Navigator.of(context).pop();
                   Get.toNamed(ScreenContactUs.tag);

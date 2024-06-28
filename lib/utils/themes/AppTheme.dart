@@ -13,7 +13,6 @@ class AppThemeData {
     scaffoldBackgroundColor: whiteColor,
     primaryColor: appColorPrimary,
     primaryColorDark: appColorPrimary,
-    errorColor: Colors.red,
     hoverColor: Colors.white54,
     dividerColor: viewLineColor,
     fontFamily: GoogleFonts.openSans().fontFamily,
@@ -23,16 +22,16 @@ class AppThemeData {
       systemOverlayStyle: SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
     ),
     textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black),
-    colorScheme: const ColorScheme.light(primary: appColorPrimary, primaryVariant: appColorPrimary),
+    colorScheme: const ColorScheme.light(primary: appColorPrimary, primaryContainer: appColorPrimary),
     cardTheme: const CardTheme(color: Colors.white),
     cardColor: cardLightColor,
     iconTheme: const IconThemeData(color: textPrimaryColor),
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: whiteColor),
-    textTheme: const TextTheme(
-      button: TextStyle(color: appColorPrimary),
-      headline6: TextStyle(color: textPrimaryColor),
-      subtitle2: TextStyle(color: textSecondaryColor),
-    ),
+    // textTheme: const TextTheme(
+    //   button: TextStyle(color: appColorPrimary),
+    //   headline6: TextStyle(color: textPrimaryColor),
+    //   subtitle2: TextStyle(color: textSecondaryColor),
+    // ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   ).copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -46,7 +45,7 @@ class AppThemeData {
   static final ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: appBackgroundColorDark,
     highlightColor: appBackgroundColorDark,
-    errorColor: const Color(0xFFCF6676),
+    // errorColor: const Color(0xFFCF6676),
     appBarTheme: const AppBarTheme(
       color: appBackgroundColorDark,
       iconTheme: IconThemeData(color: blackColor),
@@ -59,17 +58,17 @@ class AppThemeData {
     hoverColor: Colors.black12,
     fontFamily: GoogleFonts.openSans().fontFamily,
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: appBackgroundColorDark),
-    primaryTextTheme: TextTheme(headline6: primaryTextStyle(color: Colors.white), overline: primaryTextStyle(color: Colors.white)),
+    primaryTextTheme: TextTheme(headlineMedium: primaryTextStyle(color: Colors.white), labelLarge: primaryTextStyle(color: Colors.white)),
     cardTheme: const CardTheme(color: cardBackgroundBlackDark),
     cardColor: appSecondaryBackgroundColor,
     iconTheme: const IconThemeData(color: whiteColor),
-    textTheme: const TextTheme(
-      button: TextStyle(color: color_primary_black),
-      headline6: TextStyle(color: whiteColor),
-      subtitle2: TextStyle(color: Colors.white54),
-    ),
+    // textTheme: const TextTheme(
+    //   button: TextStyle(color: color_primary_black),
+    //   headline6: TextStyle(color: whiteColor),
+    //   subtitle2: TextStyle(color: Colors.white54),
+    // ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    colorScheme: const ColorScheme.dark(primary: appBackgroundColorDark, onPrimary: cardBackgroundBlackDark, primaryVariant: color_primary_black).copyWith(secondary: whiteColor),
+    colorScheme: const ColorScheme.dark(primary: appBackgroundColorDark, onPrimary: cardBackgroundBlackDark, primaryContainer: color_primary_black).copyWith(secondary: whiteColor),
   ).copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
