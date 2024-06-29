@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "tech_shop_frontend",
+            "request": "launch",
+            "type": "dart",
+            "args": ["-d", "chrome", "--web-port", "58261"],
+        },
+        {
+            "name": "tech_shop_frontend (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "args": ["-d", "chrome","--web-port", "58261"],
+
+        },
+        {
+            "name": "tech_shop_frontend (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": ["-d", "chrome","--web-port", "58261"],
+
+        }
+    ]
+}

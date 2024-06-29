@@ -10,9 +10,6 @@ ProductRequestModel _$ProductRequestModelFromJson(Map<String, dynamic> json) =>
     ProductRequestModel(
       name: json['name'] as String?,
       price: (json['price'] as num?)?.toDouble(),
-      images: (json['productImages'] as List<dynamic>?)
-          ?.map((e) => ProductImage.fromJson(e as Map<String, dynamic>))
-          .toList(),
       imageUrl: json['imageUrl'] as String?,
       description: json['description'] as String?,
       salePrice: (json['salePrice'] as num?)?.toDouble(),
@@ -28,9 +25,8 @@ Map<String, dynamic> _$ProductRequestModelToJson(
       'imageUrl': instance.imageUrl,
       'price': instance.price,
       'salePrice': instance.salePrice,
-      'description': instance.description,
-      'productImages': instance.images?.map((e) => e.toJson()).toList(),
       'productTypeEnum': _$CategoryEnumEnumMap[instance.type]!,
+      'description': instance.description,
     };
 
 const _$CategoryEnumEnumMap = {

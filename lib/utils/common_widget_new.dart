@@ -58,7 +58,10 @@ class ProductHorizontalListV2 extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     Get.toNamed(ScreenProductDetail.tag,
-                        parameters: productList[index].toJson().encode);
+                        parameters: {
+                          "productId": productList[index].productId ?? ""
+                        },
+                   );
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,36 +78,40 @@ class ProductHorizontalListV2 extends StatelessWidget {
                                 maxLines: 2,
                                 style: boldTextStyle().copyWith(fontSize: 13)),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                productList[index]
-                                    .price
-                                    .toString()
-                                    .toCurrencyFormat()!,
-                                style: secondaryTextStyle(
-                                    decoration: TextDecoration.lineThrough).copyWith(fontSize: 13),
-                                softWrap: true,
-                              ),
-                              const SizedBox(width: spacing_control_half),
-                              text(
-                                true
-                                    ? productList[index]
-                                        .salePrice
-                                        .toString()
-                                        .toCurrencyFormat()
-                                    : productList[index]
-                                        .price
-                                        .toString()
-                                        .toCurrencyFormat(),
-                                textColor: sh_colorPrimary,
-                                fontFamily: fontMedium,
-                                fontSize: textSizeMedium,
-                              ),
-                              const SizedBox(width: spacing_control_half),
-                            ],
-                          ).expand()
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  productList[index]
+                                      .price
+                                      .toString()
+                                      .toCurrencyFormat()!,
+                                  style: secondaryTextStyle(
+                                          decoration:
+                                              TextDecoration.lineThrough)
+                                      .copyWith(fontSize: 13),
+                                  softWrap: true,
+                                ),
+                                const SizedBox(width: spacing_control_half),
+                                text(
+                                  productList[index]
+                                      .salePrice
+                                      .toString()
+                                      .toCurrencyFormat(),
+                                  // : productList[index]
+                                  //     .price
+                                  //     .toString()
+                                  //     .toCurrencyFormat(),
+                                  textColor: sh_colorPrimary,
+                                  fontFamily: fontMedium,
+                                  fontSize: 13,
+                                ),
+                                const SizedBox(width: spacing_control_half),
+                              ],
+                            ).expand(),
+                          )
                         ],
                       ).paddingOnly(left: spacing_standard_new)
                     ],

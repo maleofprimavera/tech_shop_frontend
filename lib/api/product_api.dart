@@ -14,13 +14,23 @@ abstract class ProductApi {
 
   @GET("/filter-by-id/{id}")
   Future<ProductResponse?> getProductById(@Path() String id);
-  
+
   @POST("/add")
   Future addNewProducts(@Body() List<ProductResponse> productList);
 
   @DELETE("/delete-by-id/{id}")
   Future<String> deleteById(@Path() String id);
-  //
+
   @PATCH("/update-product")
-  Future updateProduct(@Query("id") String id, @Body() ProductRequestModel productRecordUpdate);
+  Future updateProduct(
+      @Query("id") String id, @Body() ProductRequestModel productRecordUpdate);
+
+  @GET("/cart/user01/all")
+  Future<List<ProductResponse>?> getCartProducts();
+
+  @POST("/cart/user01/add/{productId}")
+  Future<List<ProductResponse>?> addProductToCart(@Path("productId") String productId);
+
+  @DELETE("/cart/user01/delete/{productId}")
+  Future removeProductFromCart(@Path("productId") String productId);
 }

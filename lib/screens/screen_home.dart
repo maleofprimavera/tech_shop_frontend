@@ -1,22 +1,18 @@
 import 'package:ecommerce_responsive/api/product_api_impl.dart';
 import 'package:ecommerce_responsive/models/product_response.dart';
-import 'package:ecommerce_responsive/screens/screen_search_product.dart';
 import 'package:ecommerce_responsive/screens/side_drawer.dart';
 import 'package:ecommerce_responsive/utils/widgets/dots_indicator/src/dots_decorator.dart';
 import 'package:ecommerce_responsive/utils/widgets/dots_indicator/src/dots_indicator.dart';
 import 'package:ecommerce_responsive/utils/widgets/footer.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ecommerce_responsive/models/model_category.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/screens/screen_category.dart';
 import 'package:ecommerce_responsive/screens/screen_view_all_products.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
 import 'package:ecommerce_responsive/utils/root_bundle.dart';
 import 'package:ecommerce_responsive/utils/strings_constant.dart';
-import 'package:ecommerce_responsive/utils/common_widget.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 
 import '../utils/common_widget_new.dart';
@@ -56,13 +52,10 @@ class ScreenHomeState extends State<ScreenHome> {
       toasty(context, error);
     });
     // List<ModelProduct> products = await loadProducts();
-    List<ProductResponse>? products = await ApiIpml.productApi.getAllProducts() ?? [];
+    List<ProductResponse> products =
+        await ApiIpml.productApi.getAllProducts() ?? [];
     List<ProductResponse> featured = [];
-    products.map((product) {
-      if (product.featured!) {
-        featured.add(product);
-      }
-    });
+    featured = products.where((element) => element.featured ?? false).toList();
     /// banner
     List<String> banner = [];
     for (var i = 1; i < 7; i++) {
@@ -197,7 +190,7 @@ class ScreenHomeState extends State<ScreenHome> {
                               title: sh_lbl_Featured)
                           .launch(context);
                     }),
-                    ProductHorizontalList(featuredProducts),
+                    ProductHorizontalListV2(featuredProducts),
                     const SizedBox(height: 60),
 
                     const Footer()

@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:ecommerce_responsive/api/product_api_impl.dart';
+import 'package:ecommerce_responsive/models/product_response.dart';
+import 'package:ecommerce_responsive/utils/constant_manager.dart';
 import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
@@ -22,17 +25,19 @@ import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
 import '../utils/widgets/rating_bar.dart';
 
 class ScreenProductDetail extends StatefulWidget {
-  static const String tag = '/productDetail/';
+  static const String tag = '/productDetail';
 
-  const ScreenProductDetail({super.key,});
+  const ScreenProductDetail({
+    super.key,
+  });
 
   @override
   ScreenProductDetailState createState() => ScreenProductDetailState();
 }
 
 class ScreenProductDetailState extends State<ScreenProductDetail> {
-
-  ModelProduct product = ModelProduct.fromJson(Get.parameters.decode);
+  String productId = Get.parameters.values.first as String;
+  ProductResponse? product;
   var position = 0;
   bool isExpanded = false;
   var selectedColor = -1;
@@ -50,9 +55,13 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
   @override
   void initState() {
     super.initState();
-    // fetchData();
+    fetchData();
   }
 
+  fetchData() async {
+    product = await ApiIpml.productApi.getProductById(productId);
+    setState(() {});
+  }
   // fetchData() async {
   //   var products = await loadProducts();
   //   setState(() {
@@ -108,9 +117,14 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
     var sliderImages = SizedBox(
       height: 380,
       child: PageView.builder(
-        itemCount: product.images!.length,
+        itemCount: product?.images?.length,
         itemBuilder: (context, index) {
-          return Image.asset("${base}img/products${product.images![index].src!}", width: width, height: width * 1.05, fit: BoxFit.fitHeight);
+          return Image.network(
+              product?.images![index].src ??
+                  ConstantManager.placeholderImagePath,
+              width: width,
+              height: width * 1.05,
+              fit: BoxFit.fitHeight);
         },
         onPageChanged: (index) {
           position = index;
@@ -126,10 +140,13 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(product.name!, style: boldTextStyle(size: 18)),
+              Text(product?.name ?? "Untitled", style: boldTextStyle(size: 18)),
               text(
                 // onsale
-                true ? product.salePrice.toCurrencyFormat() : product.price.toCurrencyFormat(),
+                // true
+                //     ?
+                product?.salePrice.toString().toCurrencyFormat() ?? "Updating",
+                // : product?.price.toString().toCurrencyFormat(),
                 textColor: sh_colorPrimary,
                 fontSize: textSizeXNormal,
                 fontFamily: fontMedium,
@@ -140,226 +157,17 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // Expanded(
-              //   child: Row(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: <Widget>[
-              //       Container(
-              //         padding: const EdgeInsets.only(left: 12, right: 12, top: 0, bottom: 0),
-              //         decoration: BoxDecoration(
-              //           borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
-              //           color: double.parse(product.average_rating!) < 2
-              //               ? Colors.red
-              //               : double.parse(product.average_rating!) < 4
-              //               ? Colors.orange
-              //               : Colors.green,
-              //         ),
-              //         child: Row(
-              //           children: <Widget>[
-              //             Text("3.0", style: boldTextStyle(color: sh_white)),
-              //             2.width,
-              //             const Icon(Icons.star, color: sh_white, size: 12),
-              //           ],
-              //         ),
-              //       ),
-              //       8.width,
-              //       text("${list.length} Reviewer")
-              //     ],
-              //   ),
-              // ),
               Text(
-                product.regular_price.toString().toCurrencyFormat()!,
-                style: primaryTextStyle(color: sh_textColorSecondary,decoration: TextDecoration.lineThrough),
+                product?.price.toString().toCurrencyFormat() ?? "Updating",
+                style: primaryTextStyle(
+                    color: sh_textColorSecondary,
+                    decoration: TextDecoration.lineThrough),
               )
             ],
           )
         ],
       ),
     );
-
-    // var colorList = [];
-    // for (var element in product.colors!) {
-    //     if (element.name == 'Color') colorList.addAll(element.options!);
-    //   }
-
-    // var colors = ListView.builder(
-    //   scrollDirection: Axis.horizontal,
-    //   itemCount: 0,
-    //   shrinkWrap: true,
-    //   itemBuilder: (context, index) {
-    //     return GestureDetector(
-    //       onTap: () {
-    //         selectedColor = index;
-    //         setState(() {});
-    //       },
-    //       child: Container(
-    //         padding: const EdgeInsets.all(7),
-    //         margin: const EdgeInsets.only(right: spacing_xlarge),
-    //         decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: sh_textColorPrimary, width: 0.5), color: getColorFromHex(colorList[index])),
-    //         child: selectedColor == index ? const Icon(Icons.done, color: sh_white, size: 12) : Container(),
-    //       ),
-    //     );
-    //   },
-    // );
-
-    // var sizeList = [];
-    // product.attributes!.forEach((element) {
-    //   if (element.name == 'Size') sizeList.addAll(element.options!);
-    // });
-    //
-    // var brandList = [];
-    // product.attributes!.forEach((element) {
-    //   if (element.name == 'Brand') brandList.addAll(element.options!);
-    // });
-    //
-    // var bands = "";
-    // brandList.forEach((brand) {
-    //   bands = "$bands$brand, ";
-    // });
-
-    // var sizes = ListView.builder(
-    //   scrollDirection: Axis.horizontal,
-    //   itemCount: sizeList.length,
-    //   shrinkWrap: true,
-    //   itemBuilder: (context, index) {
-    //     return GestureDetector(
-    //       onTap: () {
-    //         selectedSize = index;
-    //         setState(() {});
-    //       },
-    //       child: Container(
-    //         width: 30,
-    //         height: 30,
-    //         margin: const EdgeInsets.only(right: spacing_xlarge),
-    //         decoration: selectedSize == index
-    //             ? BoxDecoration(
-    //           shape: BoxShape.circle,
-    //           border: Border.all(color: sh_textColorPrimary, width: 0.5),
-    //           color: sh_colorPrimary,
-    //         )
-    //             : const BoxDecoration(),
-    //         child: Center(
-    //           child: Text(
-    //             sizeList[index],
-    //             style: primaryTextStyle(
-    //               color: selectedSize == index
-    //                   ? sh_white
-    //                   : appStore.isDarkModeOn
-    //                   ? white
-    //                   : sh_textColorPrimary,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
-    //
-    // Widget colorSizeWidget = Wrap(
-    //   children: [
-    //
-    //     Card(
-    //       child: Container(
-    //         width: width < 516? (width-20): width * 0.48,
-    //         constraints: const BoxConstraints(minWidth: 250),
-    //         padding: const EdgeInsets.all(20),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text(sh_lbl_colors, style: boldTextStyle()),
-    //             SizedBox(height: 30, child: colors),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //
-    //     sizeList.isNotEmpty ?
-    //     Card(
-    //       child: Container(
-    //         width: width < 516? (width-20): width * 0.48,
-    //         constraints: const BoxConstraints(minWidth: 250),
-    //         padding: const EdgeInsets.all(20),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text(sh_lbl_size, style: boldTextStyle()),
-    //             SizedBox(height: 30, child: sizes)
-    //           ],
-    //         ),
-    //       ),
-    //     ) : const SizedBox(),
-    //   ],
-    // );
-
-    // var reviews = ListView.builder(
-    //   scrollDirection: Axis.vertical,
-    //   itemCount: list.length,
-    //   shrinkWrap: true,
-    //   physics: const NeverScrollableScrollPhysics(),
-    //   itemBuilder: (context, index) {
-    //     return Container(
-    //       margin: const EdgeInsets.only(bottom: spacing_standard_new),
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: <Widget>[
-    //           Row(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: <Widget>[
-    //               Container(
-    //                 padding: const EdgeInsets.only(left: 12, right: 12, top: 1, bottom: 1),
-    //                 decoration: BoxDecoration(
-    //                     borderRadius: const BorderRadius.all(Radius.circular(spacing_standard_new)),
-    //                     color: list[index].rating! < 2
-    //                         ? Colors.red
-    //                         : list[index].rating! < 4
-    //                         ? Colors.orange
-    //                         : Colors.green),
-    //                 child: Row(
-    //                   children: <Widget>[
-    //                     text(list[index].rating.toString(), textColor: sh_white),
-    //                     const SizedBox(width: spacing_control_half),
-    //                     const Icon(Icons.star, color: sh_white, size: 12),
-    //                   ],
-    //                 ),
-    //               ),
-    //               const SizedBox(width: spacing_standard_new),
-    //               Expanded(
-    //                 child: Column(
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text(list[index].name!, style: boldTextStyle()),
-    //                     Text(list[index].review!, style: secondaryTextStyle()),
-    //                   ],
-    //                 ),
-    //               )
-    //             ],
-    //           ),
-    //           8.height,
-    //           Image.asset("${base}img/products${product.images![0].src!}", width: 90, height: 110, fit: BoxFit.fill),
-    //           8.height,
-    //           Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Row(
-    //                 children: [
-    //                   Container(
-    //                     padding: const EdgeInsets.all(4),
-    //                     margin: const EdgeInsets.only(right: spacing_standard),
-    //                     decoration: BoxDecoration(shape: BoxShape.circle, color: list[index].verified! ? Colors.green : Colors.grey.withOpacity(0.5)),
-    //                     child: Icon(list[index].verified! ? Icons.done : Icons.clear, color: sh_white, size: 14),
-    //                   ),
-    //                   Text(list[index].verified! ? sh_lbl_verified : sh_lbl_not_verified, style: primaryTextStyle())
-    //                 ],
-    //               ),
-    //               text("26 June 2019", fontSize: textSizeMedium)
-    //             ],
-    //           )
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
 
     var descriptionTab = SingleChildScrollView(
       child: Container(
@@ -370,8 +178,8 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
             Stack(
               alignment: Alignment.bottomRight,
               children: <Widget>[
-                Text(product.description!, style: secondaryTextStyle()),
-
+                Text(product?.description ?? "Updating",
+                    style: secondaryTextStyle()),
               ],
             ),
             const SizedBox(height: spacing_standard_new),
@@ -380,16 +188,21 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                 Expanded(
                   child: Container(
                     height: 40,
-                    decoration: BoxDecoration(border: Border.all(color: sh_view_color)),
-                    padding: const EdgeInsets.only(left: spacing_middle, right: spacing_middle),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: sh_view_color)),
+                    padding: const EdgeInsets.only(
+                        left: spacing_middle, right: spacing_middle),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         const Expanded(
                           child: TextField(
-                            style: TextStyle(fontSize: textSizeMedium, color: sh_textColorPrimary),
-                            decoration: InputDecoration(border: InputBorder.none, hintText: "Pincode"),
+                            style: TextStyle(
+                                fontSize: textSizeMedium,
+                                color: sh_textColorPrimary),
+                            decoration: InputDecoration(
+                                border: InputBorder.none, hintText: "Pincode"),
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.start,
                           ),
@@ -398,9 +211,11 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                           width: 1,
                           height: 25,
                           color: sh_view_color,
-                          margin: const EdgeInsets.only(left: spacing_middle, right: spacing_middle),
+                          margin: const EdgeInsets.only(
+                              left: spacing_middle, right: spacing_middle),
                         ),
-                        Text("Check Availability", style: secondaryTextStyle(size: 12))
+                        Text("Check Availability",
+                            style: secondaryTextStyle(size: 12))
                       ],
                     ),
                   ),
@@ -412,14 +227,15 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(sh_lbl_delivered_by, style: primaryTextStyle(size: 14)),
-                    Text("25 June, Monday", style: secondaryTextStyle(size: 12)),
+                    Text(sh_lbl_delivered_by,
+                        style: primaryTextStyle(size: 14)),
+                    Text("25 June, Monday",
+                        style: secondaryTextStyle(size: 12)),
                   ],
                 )
               ],
             ),
             const SizedBox(height: spacing_standard_new),
-
           ],
         ),
       ),
@@ -587,20 +403,43 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
     // );
     var bottomButtons = Container(
       height: 50,
-      decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.7), blurRadius: 16, spreadRadius: 2, offset: const Offset(3, 1))], color: sh_white),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: Colors.grey.withOpacity(0.7),
+            blurRadius: 16,
+            spreadRadius: 2,
+            offset: const Offset(3, 1))
+      ], color: sh_white),
       child: Row(
         children: <Widget>[
-          Container(
-            color: context.cardColor,
-            alignment: Alignment.center,
-            height: double.infinity,
-            child: Text(sh_lbl_add_to_cart, style: boldTextStyle(color: appStore.isDarkModeOn ? white : sh_textColorPrimary)),
-          ).expand(),
+          Expanded(
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () async {
+                  await addProductToCard(productId);
+                },
+                child: Container(
+                  color: context.cardColor,
+                  alignment: Alignment.center,
+                  height: double.infinity,
+                  child: Text(sh_lbl_add_to_cart,
+                      style: boldTextStyle(
+                          color: appStore.isDarkModeOn
+                              ? white
+                              : sh_textColorPrimary)),
+                ),
+              ),
+            ),
+          ),
           Container(
             color: sh_colorPrimary,
             alignment: Alignment.center,
             height: double.infinity,
-            child: text(sh_lbl_buy_now, textColor: sh_white, fontSize: textSizeLargeMedium, fontFamily: fontMedium),
+            child: text(sh_lbl_buy_now,
+                textColor: sh_white,
+                fontSize: textSizeLargeMedium,
+                fontFamily: fontMedium),
           ).expand()
         ],
       ),
@@ -610,27 +449,36 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
       length: 3,
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          changeStatusColor(innerBoxIsScrolled ? Colors.white : Colors.transparent);
+          changeStatusColor(
+              innerBoxIsScrolled ? Colors.white : Colors.transparent);
           return <Widget>[
             SliverAppBar(
-              expandedHeight: kIsWeb ?height*0.85 : height*0.71,
+              expandedHeight: kIsWeb ? height * 0.85 : height * 0.71,
               floating: false,
               pinned: true,
               titleSpacing: 0,
               automaticallyImplyLeading: false,
               backgroundColor: context.cardColor,
-              iconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
-              actionsIconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+              iconTheme: IconThemeData(
+                  color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+              actionsIconTheme: IconThemeData(
+                  color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
               actions: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(spacing_standard),
                   margin: const EdgeInsets.only(right: spacing_standard_new),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.withOpacity(0.1)),
-                  child: Icon(Icons.favorite_border, color: appStore.isDarkModeOn ? white : sh_textColorPrimary, size: 18),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey.withOpacity(0.1)),
+                  child: Icon(Icons.favorite_border,
+                      color:
+                          appStore.isDarkModeOn ? white : sh_textColorPrimary,
+                      size: 18),
                 ),
                 cartIcon(context, 3)
               ],
-              title: Text(innerBoxIsScrolled ? product.name! : "", style: boldTextStyle()),
+              title: Text(innerBoxIsScrolled ? product?.name ?? "Untitled" : "",
+                  style: boldTextStyle()),
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
                 background: SingleChildScrollView(
@@ -672,51 +520,58 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
     );
 
     return Scaffold(
-      appBar: context.isDesktop()? const DefaultAppBar(title: "",): null,
+      appBar: context.isDesktop()
+          ? const DefaultAppBar(
+              title: "",
+            )
+          : null,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: <Widget>[
-            !context.isDesktop()?
-            tapControllerWidget:
-
-            Wrap(
-              children: [
-                SizedBox(
-                  width: width*0.49, height: height,
-                  child: Column(
+            !context.isDesktop()
+                ? tapControllerWidget
+                : Wrap(
                     children: [
-                      sliderImages,
-                      productInfo,
-                      Center(child: bottomButtons)
+                      SizedBox(
+                        width: width * 0.49,
+                        height: height,
+                        child: Column(
+                          children: [
+                            sliderImages,
+                            productInfo,
+                            Center(child: bottomButtons)
+                          ],
+                        ),
+                      ),
+                      if (context.isDesktop())
+                        SizedBox(
+                            width: width * 0.49,
+                            height: height,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  descriptionTab,
+                                  // colorSizeWidget,
+                                  // moreInfoTab,
+                                  // reviewsTab,
+                                ],
+                              ),
+                            ))
                     ],
                   ),
-                ),
-                if(context.isDesktop())
-                SizedBox(
-                    width: width*0.49, height: height,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          descriptionTab,
-                          // colorSizeWidget,
-                          // moreInfoTab,
-                          // reviewsTab,
-                        ],
-                      ),
-                    )
-                )
-              ],
-            ),
-            if(!context.isDesktop())
-            bottomButtons
+            if (!context.isDesktop()) bottomButtons
           ],
         ),
       ),
     );
   }
 
-  Widget reviewText(rating, {size = 15.0, fontSize = textSizeLargeMedium, fontFamily = fontMedium, textColor = sh_textColorPrimary}) {
+  Widget reviewText(rating,
+      {size = 15.0,
+      fontSize = textSizeLargeMedium,
+      fontFamily = fontMedium,
+      textColor = sh_textColorPrimary}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -757,10 +612,14 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                   Container(
                     alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width - 40,
-                    decoration: boxDecoration(bgColor: context.cardColor, showShadow: false, radius: spacing_middle),
+                    decoration: boxDecoration(
+                        bgColor: context.cardColor,
+                        showShadow: false,
+                        radius: spacing_middle),
                     child: Column(
                       children: <Widget>[
-                        Text("Review", style: boldTextStyle(size: 24)).paddingAll(8),
+                        Text("Review", style: boldTextStyle(size: 24))
+                            .paddingAll(8),
                         const Divider(thickness: 0.5),
                         Padding(
                           padding: const EdgeInsets.all(spacing_large),
@@ -775,24 +634,32 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: spacing_large, right: spacing_large),
+                          padding: const EdgeInsets.only(
+                              left: spacing_large, right: spacing_large),
                           child: Form(
                             key: _formKey,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             child: TextFormField(
                               controller: controller,
                               keyboardType: TextInputType.multiline,
                               maxLines: 5,
                               validator: (value) {
-                                return value!.isEmpty ? "Review Filed Required!" : null;
+                                return value!.isEmpty
+                                    ? "Review Filed Required!"
+                                    : null;
                               },
                               style: primaryTextStyle(),
                               decoration: InputDecoration(
                                 hintText: 'Describe your experience',
                                 hintStyle: primaryTextStyle(),
                                 border: InputBorder.none,
-                                enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1)),
-                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1)),
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1)),
+                                focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1)),
                                 filled: false,
                               ),
                             ),
@@ -803,15 +670,13 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                           children: <Widget>[
                             RoundedButton(
                                 title: sh_lbl_cancel,
-                                onPress:() =>finish(context)),
-
+                                onPress: () => finish(context)),
                             16.width,
-
                             RoundedButton(
                               title: sh_lbl_submit,
                               color: sh_colorPrimary,
                               titleColor: sh_white,
-                              onPress:() {
+                              onPress: () {
                                 finish(context);
                                 final form = _formKey.currentState!;
                                 if (form.validate()) {
@@ -848,7 +713,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       margin: const EdgeInsets.only(left: 16, right: 16),
       color: sh_white,

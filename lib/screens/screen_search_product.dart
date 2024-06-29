@@ -1,3 +1,4 @@
+import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
 import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
@@ -29,11 +30,11 @@ class ScreenSearchProduct extends StatefulWidget {
 
 class ScreenSearchProductState extends State<ScreenSearchProduct> {
   TextEditingController searchController = TextEditingController();
-  List<ModelProduct> resultList = [];
+  List<ProductResponse> resultList = [];
   bool isLoadingMoreData = false;
   bool isEmpty = false;
   var searchText = "";
-  List<ModelProduct> products = [];
+  List<ProductResponse>? products = [];
   List<TrackSize> rowSizes = [];
 
   @override
@@ -43,12 +44,12 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
   }
 
   fetchData() async {
-    products = await loadProducts();
+    products = await loadAllProducts();
   }
 
   searchData() async {
-    List<ModelProduct> filteredList = [];
-    for (var product in products) {
+    List<ProductResponse> filteredList = [];
+    for (var product in products ?? []) {
       if (product.name!.toLowerCase().contains(searchText)) {
         filteredList.add(product);
       }
@@ -63,127 +64,148 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
 
   @override
   Widget build(BuildContext context) {
-
-    Widget searchList = resultList.isNotEmpty?
-    LayoutGrid(
-        columnSizes: context.isPhone() ? [1.fr] : [1.fr, 1.fr],
-        rowSizes: rowSizes,
-        rowGap: 15,
-        columnGap: 15,
-        children: [
-            for (var index = 0; index < resultList.length; index++)
-            InkWell(
-              onTap: () {
-                Get.toNamed(ScreenProductDetail.tag, parameters: resultList[index]
-                    .toJson()
-                    .encode);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                constraints: const BoxConstraints(maxHeight: 200),
-                child: Row(
-                  children: <Widget>[
-                    ImageHolder(
-                        imagePath: "${base}img/products${resultList[index].images![0]
-                            .src!}"),
-
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    Widget searchList = resultList.isNotEmpty
+        ? LayoutGrid(
+            columnSizes: context.isPhone() ? [1.fr] : [1.fr, 1.fr],
+            rowSizes: rowSizes,
+            rowGap: 15,
+            columnGap: 15,
+            children: [
+                for (var index = 0; index < resultList.length; index++)
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(ScreenProductDetail.tag,
+                          parameters: resultList[index].toJson().encode);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      constraints: const BoxConstraints(maxHeight: 200),
+                      child: Row(
                         children: <Widget>[
-                          text(resultList[index].name, textColor: sh_textColorPrimary),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: <Widget>[
-                              // onsale
-                              text(
-                                  true ? resultList[index]
-                                  .salePrice.toString()
-                                  .toCurrencyFormat() : resultList[index].price
-                                  .toString().toCurrencyFormat(),
-                                  textColor: sh_colorPrimary,
-                                  fontFamily: fontMedium,
-                                  fontSize: textSizeNormal),
+                          ImageHolder(
+                              isNetworkImage: true,
+                              imagePath:
+                                  resultList[index].images![0].src ?? ""),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                text(resultList[index].name,
+                                    textColor: sh_textColorPrimary),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: <Widget>[
+                                    // onsale
+                                    text(
+                                        true
+                                            ? resultList[index]
+                                                .salePrice
+                                                .toString()
+                                                .toCurrencyFormat()
+                                            : resultList[index]
+                                                .price
+                                                .toString()
+                                                .toCurrencyFormat(),
+                                        textColor: sh_colorPrimary,
+                                        fontFamily: fontMedium,
+                                        fontSize: textSizeNormal),
 
-                              const SizedBox(width: spacing_control,),
+                                    const SizedBox(
+                                      width: spacing_control,
+                                    ),
 
-                              Text(
-                                resultList[index].regular_price.toString()
-                                    .toCurrencyFormat()!,
-                                style: const TextStyle(color: sh_textColorSecondary,
-                                    fontFamily: fontRegular,
-                                    fontSize: textSizeSmall,
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: spacing_standard,),
-
-                          // Row(children: colorWidget(resultList[index].attributes!)),
-
-                          const SizedBox(height: 4),
-
-                          Flexible(child: Text(
-                            resultList[index].description!, maxLines: 3,
-                            overflow: TextOverflow.ellipsis,)),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              // RatingBar(
-                              //   initialRating: double.parse(
-                              //       resultList[index].average_rating!),
-                              //   direction: Axis.horizontal,
-                              //   allowHalfRating: true,
-                              //   tapOnlyMode: true,
-                              //   itemCount: 5,
-                              //   itemSize: 16,
-                              //   itemBuilder: (context, _) =>
-                              //   const Icon(
-                              //     Icons.star,
-                              //     color: Colors.amber,
-                              //   ),
-                              //   onRatingUpdate: (rating) {},
-                              // ),
-                              Container(
-                                padding: const EdgeInsets.all(spacing_control),
-                                margin: const EdgeInsets.only(right: spacing_standard),
-                                decoration: const BoxDecoration(
-                                    shape: BoxShape.circle, color: sh_white),
-                                child: const Icon(
-                                  Icons.favorite_border,
-                                  color: sh_textColorPrimary,
-                                  size: 16,
+                                    Text(
+                                      resultList[index]
+                                          .price
+                                          .toString()
+                                          .toCurrencyFormat()!,
+                                      style: const TextStyle(
+                                          color: sh_textColorSecondary,
+                                          fontFamily: fontRegular,
+                                          fontSize: textSizeSmall,
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
+
+                                const SizedBox(
+                                  height: spacing_standard,
+                                ),
+
+                                // Row(children: colorWidget(resultList[index].attributes!)),
+
+                                const SizedBox(height: 4),
+
+                                Flexible(
+                                    child: Text(
+                                  resultList[index].description!,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    // RatingBar(
+                                    //   initialRating: double.parse(
+                                    //       resultList[index].average_rating!),
+                                    //   direction: Axis.horizontal,
+                                    //   allowHalfRating: true,
+                                    //   tapOnlyMode: true,
+                                    //   itemCount: 5,
+                                    //   itemSize: 16,
+                                    //   itemBuilder: (context, _) =>
+                                    //   const Icon(
+                                    //     Icons.star,
+                                    //     color: Colors.amber,
+                                    //   ),
+                                    //   onRatingUpdate: (rating) {},
+                                    // ),
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.all(spacing_control),
+                                      margin: const EdgeInsets.only(
+                                          right: spacing_standard),
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: sh_white),
+                                      child: const Icon(
+                                        Icons.favorite_border,
+                                        color: sh_textColorPrimary,
+                                        size: 16,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 4),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            )
-        ]
-    ):
-    const SizedBox.shrink();
+                  )
+              ])
+        : const SizedBox.shrink();
 
     return Scaffold(
-      appBar:const DefaultAppBar(title: "Search",),
-
+      appBar: const DefaultAppBar(
+        title: "Search",
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             AppBar(
-              iconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
-              actionsIconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+              iconTheme: IconThemeData(
+                  color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+              actionsIconTheme: IconThemeData(
+                  color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
               title: TextFormField(
-                onChanged: (value){
+                onChanged: (value) {
                   searchText = value;
                   isEmpty = false;
                   isLoadingMoreData = true;
@@ -192,27 +214,33 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                 controller: searchController,
                 textInputAction: TextInputAction.search,
                 style: primaryTextStyle(),
-                decoration: InputDecoration(border: InputBorder.none, hintText: "Search", hintStyle: primaryTextStyle()),
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search",
+                    hintStyle: primaryTextStyle()),
                 keyboardType: TextInputType.text,
                 textAlign: TextAlign.start,
               ),
               actions: <Widget>[
                 searchController.text.isNotEmpty
                     ? IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: appStore.isDarkModeOn ? white : sh_textColorPrimary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                        searchController.clear();
-                        resultList.clear();
-                        isEmpty = false;
-                        isLoadingMoreData = false;
-                      },
-                    );
-                  },
-                )
+                        icon: Icon(
+                          Icons.clear,
+                          color: appStore.isDarkModeOn
+                              ? white
+                              : sh_textColorPrimary,
+                        ),
+                        onPressed: () {
+                          setState(
+                            () {
+                              searchController.clear();
+                              resultList.clear();
+                              isEmpty = false;
+                              isLoadingMoreData = false;
+                            },
+                          );
+                        },
+                      )
                     : Container()
               ],
             ),
@@ -231,9 +259,12 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             80.height,
-                            Text("No results found for \"${searchController.text}\"", style: boldTextStyle(size: 22)),
+                            Text(
+                                "No results found for \"${searchController.text}\"",
+                                style: boldTextStyle(size: 22)),
                             8.height,
-                            Text("Try a different keyword", style: secondaryTextStyle())
+                            Text("Try a different keyword",
+                                style: secondaryTextStyle())
                           ],
                         ),
                       ),

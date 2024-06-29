@@ -5,17 +5,13 @@ part 'product_request_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ProductRequestModel extends ProductResponse {
-  @override
-  final CategoryEnum type;
   const ProductRequestModel(
       {super.name,
       super.price,
-      @JsonKey(name: "productImages") super.images,
       super.imageUrl,
       super.description,
       super.salePrice,
-        @override
-      @JsonKey(name: "productTypeEnum") this.type = CategoryEnum.none});
+      super.type = CategoryEnum.none});
 
   @override
   List<Object?> get props =>

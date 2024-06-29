@@ -1,7 +1,3 @@
-import 'package:ecommerce_responsive/models/product_request_model.dart';
-import 'package:ecommerce_responsive/models/product_response.dart';
-import 'package:ecommerce_responsive/utils/enum/product_category_enum.dart';
-
 import '../api/product_api.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -81,10 +77,10 @@ void main() async {
   // ]);
   ProductApi api = ProductApi(dio, baseUrl: "http://localhost:8080");
   TestApi test = TestApi(api);
-  final result_1 = await test.productApi.getAllProducts();
-  final result_2 = await test.productApi.getProductById("prod02");
+  // final result_1 = await test.productApi.getAllProducts();
+  // final result_2 = await test.productApi.getProductById("prod02");
   // final request_01 = await test.productApi.addNewProducts(productList);
-  final request_02 = await test.productApi.deleteById("54321");
+  // final request_02 = await test.productApi.deleteById("54321");
   // final rquesrt_03 = await test.productApi.updateProduct(
   //     "55678",
   //     ProductRequestModel(
@@ -96,5 +92,6 @@ void main() async {
   //       description: "",
   //       images: List.of([]),
   //     ));
-  print(result_2.toString());
+  // print(result_2.toString());
+  await test.productApi.removeProductFromCart("prod05");
 }

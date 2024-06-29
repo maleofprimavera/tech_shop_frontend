@@ -1,10 +1,10 @@
+import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
-import 'package:ecommerce_responsive/utils/widgets/cart_item.dart';
+import 'package:ecommerce_responsive/utils/widgets/cart_item_V2.dart';
 import 'package:ecommerce_responsive/utils/widgets/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:nb_utils/nb_utils.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/screens/screen_order_summary.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
@@ -22,7 +22,7 @@ class ScreenCart extends StatefulWidget {
 }
 
 class ScreenCartState extends State<ScreenCart> {
-  List<ModelProduct> cartList = [];
+  List<ProductResponse>? cartList = [];
 
   @override
   void initState() {
@@ -31,10 +31,10 @@ class ScreenCartState extends State<ScreenCart> {
   }
 
   fetchData() async {
-    var products = await loadCartProducts();
+    var products = await loadProductFromCart();
     setState(() {
-      cartList.clear();
-      cartList.addAll(products);
+      cartList?.clear();
+      cartList?.addAll(products as Iterable<ProductResponse>);
     });
   }
 
@@ -91,18 +91,18 @@ class ScreenCartState extends State<ScreenCart> {
     var cartListWidget =  context.isDesktop()?
     GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: width<840? 2: 2.8),
-            itemCount: cartList.length,
+            itemCount: cartList?.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return IntrinsicHeight(child: CartItem(item:cartList[index]));
+              return IntrinsicHeight(child: CartItemV2(item:cartList?[index]));
             })
         : ListView.builder(
-            itemCount: cartList.length,
+            itemCount: cartList?.length,
             shrinkWrap: true,
             padding: const EdgeInsets.only(bottom: spacing_standard_new),
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return CartItem(item:cartList[index]);
+              return CartItemV2(item:cartList?[index]);
             });
 
 

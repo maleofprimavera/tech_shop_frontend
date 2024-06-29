@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:ecommerce_responsive/screens/screen_search_product.dart';
 import 'package:ecommerce_responsive/screens/screen_contact_us.dart';
 import 'package:ecommerce_responsive/screens/screen_faq.dart';
