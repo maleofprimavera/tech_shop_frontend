@@ -12,6 +12,9 @@ abstract class ProductApi {
   @GET('/')
   Future<List<ProductResponse>?> getAllProducts();
 
+  @GET('/category')
+  Future<List<ProductResponse>?> getProductsByCategory(@Query("category") String category);
+
   @GET("/filter-by-id/{id}")
   Future<ProductResponse?> getProductById(@Path() String id);
 

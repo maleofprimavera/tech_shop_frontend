@@ -1,7 +1,6 @@
 import 'package:ecommerce_responsive/models/model_category.dart';
 import 'package:ecommerce_responsive/screens/screen_account.dart';
 import 'package:ecommerce_responsive/screens/screen_contact_us.dart';
-import 'package:ecommerce_responsive/screens/screen_faq.dart';
 import 'package:ecommerce_responsive/screens/screen_order_list.dart';
 import 'package:ecommerce_responsive/screens/screen_category.dart';
 import 'package:ecommerce_responsive/screens/screen_wishlist.dart';

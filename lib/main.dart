@@ -1,10 +1,11 @@
 import 'package:ecommerce_responsive/api/product_api_impl.dart';
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
 import 'package:ecommerce_responsive/routes/route.dart';
 import 'package:ecommerce_responsive/screens/screen_splash.dart';
 import 'package:ecommerce_responsive/utils/scroll_behaviour.dart';
 import 'package:ecommerce_responsive/utils/themes/AppTheme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' hide Transition;
 import 'package:get/get.dart';
 
 import 'app_store/app_store.dart';
@@ -22,15 +23,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  GetMaterialApp(
-      title: 'ShopX',
-      scrollBehavior: AppScrollBehavior(),
-      theme: AppThemeData.lightTheme.copyWith(pageTransitionsTheme: PageTransitionsTheme(builders:<TargetPlatform, PageTransitionsBuilder>{TargetPlatform.windows: CupertinoPageTransitionsBuilder()})),
-      debugShowCheckedModeBanner: false,
-      initialRoute: ScreenSplash.tag,
-      getPages: RouteGenerator.routes,
-
+    return BlocProvider(
+      create: (context) => CartBloc()..add(const GetCartProductsEvent()),
+      child: GetMaterialApp(
+        title: 'ShopX',
+        scrollBehavior: AppScrollBehavior(),
+        theme: AppThemeData.lightTheme.copyWith(
+          pageTransitionsTheme: const PageTransitionsTheme(
+              builders: <TargetPlatform, PageTransitionsBuilder>{
+                TargetPlatform.windows: CupertinoPageTransitionsBuilder()
+              }),
+        ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: ScreenSplash.tag,
+        getPages: RouteGenerator.routes,
+        popGesture: true,
+        defaultTransition: Transition.cupertino,
+      ),
     );
   }
 }
-

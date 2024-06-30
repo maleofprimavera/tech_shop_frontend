@@ -56,7 +56,9 @@ class ScreenSplashState extends State<ScreenSplash> {
               child: Container(
                 width: width * 0.65,
                 height: width * 0.65,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: sh_colorPrimary.withOpacity(0.3)),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: sh_colorPrimary.withOpacity(0.3)),
               ),
             ),
             Center(
@@ -68,8 +70,16 @@ class ScreenSplashState extends State<ScreenSplash> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Shop", style: boldTextStyle(color: sh_textColorPrimary, size: 35, fontFamily: 'Bold')),
-                      Text("X", style: boldTextStyle(color: sh_colorPrimary, size: 35, fontFamily: 'Bold')),
+                      Text("Shop",
+                          style: boldTextStyle(
+                              color: sh_textColorPrimary,
+                              size: 35,
+                              fontFamily: 'Bold')),
+                      Text("TechX",
+                          style: boldTextStyle(
+                              color: sh_colorPrimary,
+                              size: 35,
+                              fontFamily: 'Bold')),
                     ],
                   )
                 ],
@@ -85,13 +95,18 @@ class ScreenSplashState extends State<ScreenSplash> {
                     child: Container(
                       width: width * 0.65,
                       height: width * 0.65,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: sh_colorPrimary.withOpacity(0.3)),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: sh_colorPrimary.withOpacity(0.3)),
                     ),
                   ),
                 ],
               ),
             ),
-            Align(alignment: Alignment.bottomRight, child: Image.asset(splash_img, width: width * 0.5, height: width * 0.5))
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Image.asset(splash_img,
+                    width: width * 0.5, height: width * 0.5))
           ],
         ),
       ),

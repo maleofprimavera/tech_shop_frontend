@@ -1,11 +1,12 @@
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
 import 'package:ecommerce_responsive/main.dart';
 import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/screens/screen_cart.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
-import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -52,61 +53,72 @@ class ProductHorizontalList extends StatelessWidget {
           padding: const EdgeInsets.only(right: spacing_standard_new),
           itemBuilder: (context, index) {
             return Card(
+              margin: const EdgeInsets.only(right: spacing_standard_new),
               elevation: 2,
               child: Container(
-                width: width * 0.4,
-                constraints: const BoxConstraints(maxWidth: 150),
+                width: width * 0.7,
+                constraints: const BoxConstraints(maxWidth: 250),
                 child: InkWell(
                   onTap: () {
-                    Get.toNamed(ScreenProductDetail.tag,
-                        parameters: productList[index].toJson().encode);
+                    Get.toNamed(ScreenProductDetail.tag, parameters: {
+                      "productId": productList[index].productId ?? ""
+                    });
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Image.network(
-                          productList[index].images![0].src!,
-                          height: 200,
-                          fit: BoxFit.cover),
+                      Image.network(productList[index].images![0].src!,
+                          height: 200, fit: BoxFit.cover),
                       const SizedBox(height: spacing_standard),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Text(productList[index].name!,
-                                  maxLines: 2, style: boldTextStyle())
-                              .expand(),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                productList[index]
-                                    .price
-                                    .toString()
-                                    .toCurrencyFormat()!,
-                                style: secondaryTextStyle(
-                                    decoration: TextDecoration.lineThrough),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                productList[index].name!,
+                                maxLines: 2,
+                                style: boldTextStyle().copyWith(fontSize: 13),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(width: spacing_control_half),
-                              text(
-                                true
-                                    ? productList[index]
-                                        .salePrice
-                                        .toString()
-                                        .toCurrencyFormat()
-                                    : productList[index]
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    productList[index]
                                         .price
                                         .toString()
+                                        .toCurrencyFormat()!,
+                                    style: secondaryTextStyle(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                  const SizedBox(width: spacing_control_half),
+                                  text(
+                                    // true
+                                    //     ?
+                                    productList[index]
+                                        .salePrice
+                                        .toString()
                                         .toCurrencyFormat(),
-                                textColor: sh_colorPrimary,
-                                fontFamily: fontMedium,
-                                fontSize: textSizeMedium,
+                                    // : productList[index]
+                                    //     .price
+                                    //     .toString()
+                                    //     .toCurrencyFormat(),
+                                    textColor: sh_colorPrimary,
+                                    fontFamily: fontMedium,
+                                    fontSize: 14,
+                                  ),
+                                  const SizedBox(width: spacing_control_half),
+                                ],
                               ),
-                              const SizedBox(width: spacing_control_half),
-                            ],
-                          ).expand()
-                        ],
-                      ).paddingOnly(left: spacing_standard_new)
+                            ),
+                          ],
+                        ).paddingOnly(left: spacing_standard_new),
+                      )
                     ],
                   ),
                 ),
@@ -210,39 +222,48 @@ List<Widget> colorWidget(List<Attribute> attributes) {
   return list;
 }
 
-Widget cartIcon(context, cartCount) {
-  return InkWell(
-    onTap: () {
-      Get.toNamed(ScreenCart.tag);
-    },
-    radius: spacing_standard_new,
-    child: Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Container(
-          width: 40,
-          height: 40,
-          margin: const EdgeInsets.only(right: spacing_standard_new),
-          padding: const EdgeInsets.all(spacing_standard),
-          child: SvgPicture.asset(sh_ic_cart,
-              color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
-        ),
-        cartCount > 0
-            ? Align(
+Widget cartIcon(BuildContext context) {
+  return BlocBuilder<CartBloc, CartState>(
+      bloc: context.read<CartBloc>(),
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, state) {
+        String _cartCount = "?";
+        if (state.loadStatus != LoadStatus.success) {
+          _cartCount = "?";
+        } else {
+          _cartCount = state.cartProducts.length.toString();
+        }
+        return InkWell(
+          onTap: () {
+            Get.toNamed(ScreenCart.tag);
+          },
+          radius: spacing_standard_new,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: 40,
+                height: 40,
+                margin: const EdgeInsets.only(right: spacing_standard_new),
+                padding: const EdgeInsets.all(spacing_standard),
+                child: SvgPicture.asset(sh_ic_cart,
+                    color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+              ),
+              Align(
                 alignment: Alignment.topRight,
                 child: Container(
                   margin: const EdgeInsets.only(top: spacing_control),
                   padding: const EdgeInsets.all(6),
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.red),
-                  child: text(cartCount.toString(),
+                  child: text(_cartCount,
                       textColor: sh_white, fontSize: textSizeSmall),
                 ),
               )
-            : Container()
-      ],
-    ),
-  );
+            ],
+          ),
+        );
+      });
 }
 
 Widget headingText(String content) {

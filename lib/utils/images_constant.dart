@@ -6,7 +6,7 @@ const bg_bottom_bar = "${base}bg_bottom_bar.png";
 const card = "${base}card.png";
 const chip = "${base}chip.png";
 
-const ic_app_icon = "${base}ic_app_icon.png";
+const ic_app_icon = "${base}ic_app_icon_v2.png";
 const ic_reward_back = "${base}ic_reward_back.jpg";
 const ic_scratch_pattern = "${base}ic_scratch_pattern.png";
 const ic_walk = "${base}ic_walk.jpeg";

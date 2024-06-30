@@ -3,7 +3,6 @@ import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/screens/screen_cart.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
-import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
 import 'package:ecommerce_responsive/utils/strings_constant.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';

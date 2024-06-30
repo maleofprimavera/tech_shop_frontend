@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 List<Color> webColors = [appCat1, appCat2, appCat3];

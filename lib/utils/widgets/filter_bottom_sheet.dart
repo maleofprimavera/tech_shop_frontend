@@ -8,6 +8,7 @@ import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+// ignore: must_be_immutable
 class FilterBottomSheetLayout extends StatefulWidget {
   ModelAttributes? mProductAttributeModel;
   var onSave;

@@ -3,8 +3,6 @@ import 'dart:core';
 import 'package:ecommerce_responsive/api/product_api_impl.dart';
 import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import '../models/model_address.dart';
 import '../models/model_attribute.dart';
 import '../models/model_category.dart';
 import '../models/model_order.dart';

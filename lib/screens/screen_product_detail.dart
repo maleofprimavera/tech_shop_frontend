@@ -1,21 +1,17 @@
-import 'dart:convert';
 import 'package:ecommerce_responsive/api/product_api_impl.dart';
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
 import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/utils/constant_manager.dart';
-import 'package:ecommerce_responsive/utils/images_constant.dart';
-import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
 import 'package:ecommerce_responsive/utils/widgets/material_button.dart';
 import 'package:ecommerce_responsive/utils/widgets/percent_indicator/linear_percent_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
-import 'package:ecommerce_responsive/models/model_review.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
-import 'package:ecommerce_responsive/utils/root_bundle.dart';
 import 'package:ecommerce_responsive/utils/strings_constant.dart';
 import 'package:ecommerce_responsive/utils/common_widget.dart';
 import 'package:ecommerce_responsive/main.dart';
@@ -54,6 +50,7 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
 
   @override
   void initState() {
+    context.read<CartBloc>().add(const GetCartProductsEvent());
     super.initState();
     fetchData();
   }
@@ -62,52 +59,6 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
     product = await ApiIpml.productApi.getProductById(productId);
     setState(() {});
   }
-  // fetchData() async {
-  //   var products = await loadProducts();
-  //   setState(() {
-  //     list.clear();
-  //     list.addAll(products);
-  //   });
-  //   setRating();
-  // }
-
-  // Future<List<ModelReview>> loadProducts() async {
-  //   String jsonString = await loadContentAsset('assets/shophop_data/reviews.json');
-  //   final jsonResponse = json.decode(jsonString);
-  //   return (jsonResponse as List).map((i) => ModelReview.fromJson(i)).toList();
-  // }
-
-  // setRating() {
-  //   fiveStar = 0;
-  //   fourStar = 0;
-  //   threeStar = 0;
-  //   twoStar = 0;
-  //   oneStar = 0;
-  //   for (var review in list) {
-  //     switch (review.rating) {
-  //       case 5:
-  //         fiveStar++;
-  //         break;
-  //       case 4:
-  //         fourStar++;
-  //         break;
-  //       case 3:
-  //         threeStar++;
-  //         break;
-  //       case 2:
-  //         twoStar++;
-  //         break;
-  //       case 1:
-  //         oneStar++;
-  //         break;
-  //     }
-  //   }
-  //   fiveStar = (fiveStar * 100) / list.length;
-  //   fourStar = (fourStar * 100) / list.length;
-  //   threeStar = (threeStar * 100) / list.length;
-  //   twoStar = (twoStar * 100) / list.length;
-  //   oneStar = (oneStar * 100) / list.length;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -417,7 +368,9 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () async {
-                  await addProductToCard(productId);
+                  context
+                      .read<CartBloc>()
+                      .add(AddCartProductEvent(productId: productId));
                 },
                 child: Container(
                   color: context.cardColor,
@@ -475,7 +428,7 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
                           appStore.isDarkModeOn ? white : sh_textColorPrimary,
                       size: 18),
                 ),
-                cartIcon(context, 3)
+                cartIcon(context),
               ],
               title: Text(innerBoxIsScrolled ? product?.name ?? "Untitled" : "",
                   style: boldTextStyle()),
@@ -525,43 +478,69 @@ class ScreenProductDetailState extends State<ScreenProductDetail> {
               title: "",
             )
           : null,
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: <Widget>[
-            !context.isDesktop()
-                ? tapControllerWidget
-                : Wrap(
-                    children: [
-                      SizedBox(
-                        width: width * 0.49,
-                        height: height,
-                        child: Column(
-                          children: [
-                            sliderImages,
-                            productInfo,
-                            Center(child: bottomButtons)
-                          ],
-                        ),
-                      ),
-                      if (context.isDesktop())
+      body: BlocListener<CartBloc, CartState>(
+        listenWhen: (previous, current) => previous != current,
+        listener: (context, state) {
+          if ([LoadStatus.success, LoadStatus.failed]
+              .contains(state.loadStatus)) {
+            if (!StaticVarManager.isShowToast) {
+            StaticVarManager.isShowToast = true;
+            Fluttertoast.showToast(
+              msg: state.loadStatus == LoadStatus.success
+                  ? "Succeeded"
+                  : "Failed",
+              gravity: ToastGravity.TOP,
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 2,
+              webPosition: "center",
+              webBgColor: "linear-gradient(to right, #FF6347, #FA4352)",
+              backgroundColor: Colors.pinkAccent.shade700,
+            ).then(
+              (value) {
+                StaticVarManager.isShowToast = false;
+              },
+            );
+            }
+          }
+        },
+        child: SafeArea(
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: <Widget>[
+              !context.isDesktop()
+                  ? tapControllerWidget
+                  : Wrap(
+                      children: [
                         SizedBox(
-                            width: width * 0.49,
-                            height: height,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  descriptionTab,
-                                  // colorSizeWidget,
-                                  // moreInfoTab,
-                                  // reviewsTab,
-                                ],
-                              ),
-                            ))
-                    ],
-                  ),
-            if (!context.isDesktop()) bottomButtons
-          ],
+                          width: width * 0.49,
+                          height: height,
+                          child: Column(
+                            children: [
+                              sliderImages,
+                              productInfo,
+                              Center(child: bottomButtons)
+                            ],
+                          ),
+                        ),
+                        if (context.isDesktop())
+                          SizedBox(
+                              width: width * 0.49,
+                              height: height,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    descriptionTab,
+                                    // colorSizeWidget,
+                                    // moreInfoTab,
+                                    // reviewsTab,
+                                  ],
+                                ),
+                              ))
+                      ],
+                    ),
+              if (!context.isDesktop()) bottomButtons
+            ],
+          ),
         ),
       ),
     );

@@ -1,18 +1,15 @@
+import 'package:ecommerce_responsive/utils/constant_manager.dart';
 import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
-import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
 import 'package:ecommerce_responsive/utils/widgets/filter_bottom_sheet.dart';
-import 'package:ecommerce_responsive/utils/widgets/flutter_rating_bar.dart';
 import 'package:ecommerce_responsive/utils/widgets/image_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ecommerce_responsive/models/model_attribute.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
 import 'package:ecommerce_responsive/utils/root_bundle.dart';
-import 'package:ecommerce_responsive/utils/common_widget.dart';
 import 'package:ecommerce_responsive/main.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 import '../models/product_response.dart';
@@ -24,7 +21,7 @@ class ScreenViewAllProduct extends StatefulWidget {
   final List<ProductResponse>? products;
   final String title;
 
-  const ScreenViewAllProduct({super.key, this.products,required this.title});
+  const ScreenViewAllProduct({super.key, this.products, required this.title});
 
   @override
   ScreenViewAllProductState createState() {
@@ -77,47 +74,75 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
 
   @override
   Widget build(BuildContext context) {
-
     final listView = Expanded(
       child: ListView.builder(
         itemCount: mProductList.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return  Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Card(
               elevation: 4,
               child: Container(
                 constraints: const BoxConstraints(maxHeight: 180),
                 padding: const EdgeInsets.all(10.0),
-                child:
-                Row(
+                child: Row(
                   children: <Widget>[
-                    ImageHolder(imagePath: "${base}img/products${mProductList[index].images![0].src!}"),
-
+                    ImageHolder(
+                        isNetworkImage: true,
+                        imagePath: mProductList[index].images?.first.src ??
+                            ConstantManager.placeholderImagePath),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(mProductList[index].name!, style: boldTextStyle()),
+                          Text(mProductList[index].name!,
+                              style: boldTextStyle()),
                           const SizedBox(height: 4),
                           Row(
                             children: <Widget>[
                               // on sale
-                              text(true ? mProductList[index].salePrice.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
-                                  textColor: sh_colorPrimary, fontFamily: fontMedium, fontSize: textSizeNormal),
-                              const SizedBox(width: spacing_control,),
+                              text(
+                                  true
+                                      ? mProductList[index]
+                                          .salePrice
+                                          .toString()
+                                          .toCurrencyFormat()
+                                      // ignore: dead_code
+                                      : mProductList[index]
+                                          .price
+                                          .toString()
+                                          .toCurrencyFormat(),
+                                  textColor: sh_colorPrimary,
+                                  fontFamily: fontMedium,
+                                  fontSize: textSizeNormal),
+                              const SizedBox(
+                                width: spacing_control,
+                              ),
                               Text(
-                                mProductList[index].price.toString().toCurrencyFormat()!,
-                                style: const TextStyle(color: sh_textColorSecondary, fontFamily: fontRegular, fontSize: textSizeSmall, decoration: TextDecoration.lineThrough),
+                                mProductList[index]
+                                    .price
+                                    .toString()
+                                    .toCurrencyFormat()!,
+                                style: const TextStyle(
+                                    color: sh_textColorSecondary,
+                                    fontFamily: fontRegular,
+                                    fontSize: textSizeSmall,
+                                    decoration: TextDecoration.lineThrough),
                               ),
                             ],
                           ),
                           Flexible(
-                            child: Text(mProductList[index].description!,overflow: TextOverflow.ellipsis,maxLines: 2,),
+                            child: Text(
+                              mProductList[index].description!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
                           ),
-                          const SizedBox(height: spacing_standard,),
+                          const SizedBox(
+                            height: spacing_standard,
+                          ),
                           // Row(children: colorWidget(mProductList[index].attributes!)),
                           const SizedBox(height: 4),
                           Row(
@@ -138,11 +163,16 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
                               // ),
                               Container(
                                 padding: const EdgeInsets.all(spacing_control),
-                                margin: const EdgeInsets.only(right: spacing_standard),
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: context.cardColor),
+                                margin: const EdgeInsets.only(
+                                    right: spacing_standard),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: context.cardColor),
                                 child: Icon(
                                   Icons.favorite_border,
-                                  color: appStore.isDarkModeOn ? white : sh_textColorPrimary,
+                                  color: appStore.isDarkModeOn
+                                      ? white
+                                      : sh_textColorPrimary,
                                   size: 16,
                                 ),
                               )
@@ -154,8 +184,11 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
                     )
                   ],
                 ),
-              ).onTap(() {
-                Get.toNamed(ScreenProductDetail.tag,parameters: mProductList[index].toJson().encode);
+              ).onTap(
+                () {
+                  Get.toNamed(ScreenProductDetail.tag, parameters: {
+                    "productId": mProductList[index].productId!
+                  });
                 },
               ),
             ),
@@ -164,68 +197,88 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
       ),
     );
 
-    final gridView = Wrap(
-      children: [
-        for(int index=0;index<mProductList.length;index++)
-          Card(
-            elevation: 2,
-            child: Container(
-              width: 200,
-              constraints: const BoxConstraints(maxWidth: 150),
-              child: InkWell(
-                onTap: () {
-                  Get.toNamed(ScreenProductDetail.tag,parameters: mProductList[index].toJson().encode );
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset("assets/images/shopx/img/products${mProductList[index].images![0].src!}", height: 200, fit: BoxFit.cover),
-                    const SizedBox(height: spacing_standard),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text(mProductList[index].name!, maxLines: 2, style: boldTextStyle()).expand(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              mProductList[index].price.toString().toCurrencyFormat()!,
-                              style: secondaryTextStyle(decoration: TextDecoration. lineThrough),
-                            ),
-                            const SizedBox(width: spacing_control_half),
-                            text(
-                              //onsale
-                             true ? mProductList[index].salePrice.toString().toCurrencyFormat() : mProductList[index].price.toString().toCurrencyFormat(),
-                              textColor: sh_colorPrimary,
-                              fontFamily: fontMedium,
-                              fontSize: textSizeMedium,
-                            ),
-                            const SizedBox(width: spacing_control_half),
-                          ],
-                        ).expand()
-                      ],
-                    ).paddingOnly(left: spacing_standard_new)
-                  ],
-                ),
+    final gridView = Wrap(children: [
+      for (int index = 0; index < mProductList.length; index++)
+        Card(
+          elevation: 2,
+          child: Container(
+            width: 200,
+            constraints: const BoxConstraints(maxWidth: 150),
+            child: InkWell(
+              onTap: () {
+                Get.toNamed(ScreenProductDetail.tag,
+                    parameters: mProductList[index].toJson().encode);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                      "assets/images/shopx/img/products${mProductList[index].images![0].src!}",
+                      height: 200,
+                      fit: BoxFit.cover),
+                  const SizedBox(height: spacing_standard),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(mProductList[index].name!,
+                              maxLines: 2, style: boldTextStyle())
+                          .expand(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            mProductList[index]
+                                .price
+                                .toString()
+                                .toCurrencyFormat()!,
+                            style: secondaryTextStyle(
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                          const SizedBox(width: spacing_control_half),
+                          text(
+                            //onsale
+                            true
+                                ? mProductList[index]
+                                    .salePrice
+                                    .toString()
+                                    .toCurrencyFormat()
+                                // ignore: dead_code
+                                : mProductList[index]
+                                    .price
+                                    .toString()
+                                    .toCurrencyFormat(),
+                            textColor: sh_colorPrimary,
+                            fontFamily: fontMedium,
+                            fontSize: textSizeMedium,
+                          ),
+                          const SizedBox(width: spacing_control_half),
+                        ],
+                      ).expand()
+                    ],
+                  ).paddingOnly(left: spacing_standard_new)
+                ],
               ),
             ),
           ),
-      ]
-    );
+        ),
+    ]);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title, style: boldTextStyle(size: 18)),
-        iconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
-        actionsIconTheme: IconThemeData(color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+        iconTheme: IconThemeData(
+            color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
+        actionsIconTheme: IconThemeData(
+            color: appStore.isDarkModeOn ? white : sh_textColorPrimary),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: () => showMyBottomSheet(context),
           ),
           IconButton(
-            icon: Icon(isListViewSelected ? Icons.view_list : Icons.border_all, size: 24),
+            icon: Icon(isListViewSelected ? Icons.view_list : Icons.border_all,
+                size: 24),
             onPressed: () {
               setState(
                 () {
@@ -240,16 +293,16 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
         children: [
           errorMsg.isEmpty
               ? Expanded(
-                child: Center(
+                  child: Center(
                     child: mProductList.isNotEmpty
-                        ? Column(
-                        children: [
-                          isListViewSelected ? listView : gridView,
-                          const CircularProgressIndicator().visible(isLoadingMoreData)
-                        ])
+                        ? Column(children: [
+                            isListViewSelected ? listView : gridView,
+                            const CircularProgressIndicator()
+                                .visible(isLoadingMoreData)
+                          ])
                         : const CircularProgressIndicator().paddingAll(8),
                   ),
-              )
+                )
               : Center(child: Text(errorMsg)),
         ],
       ),
@@ -258,7 +311,8 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
 
   void showMyBottomSheet(context) {
     if (mProductList.isEmpty) return;
-    void onSave(List<int> category, List<String> size, List<String> color, List<String> brand) {
+    void onSave(List<int> category, List<String> size, List<String> color,
+        List<String> brand) {
       Map request = {
         'category': category.toSet().toList(),
         'size': size.toSet().toList(),
@@ -273,7 +327,8 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
 
     Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (BuildContext context) {
-          return FilterBottomSheetLayout(mProductAttributeModel: mProductAttributeModel, onSave: onSave);
+          return FilterBottomSheetLayout(
+              mProductAttributeModel: mProductAttributeModel, onSave: onSave);
         },
         fullscreenDialog: true));
   }
@@ -289,7 +344,11 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
       if (currentIndex < maxWidget) {
         list.add(Container(
           margin: const EdgeInsets.only(right: spacing_middle),
-          child: Center(child: text(size.trim(), fontSize: textSizeMedium, textColor: sh_textColorPrimary, fontFamily: fontMedium)),
+          child: Center(
+              child: text(size.trim(),
+                  fontSize: textSizeMedium,
+                  textColor: sh_textColorPrimary,
+                  fontFamily: fontMedium)),
         ));
         currentIndex++;
       } else {
@@ -301,5 +360,3 @@ class ScreenViewAllProductState extends State<ScreenViewAllProduct> {
     return list;
   }
 }
-
-

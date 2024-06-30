@@ -5,10 +5,10 @@
     "id": 45,
     "isSelected": false,
     "menu_order": 0,
-    "name": "Men",
+    "name": "Laptop",
     "parent": 0,
-    "slug": "men",
-    "image": "assets/images/shopx/ic_men.png"
+    "slug": "LAPTOP",
+    "image": "assets/images/shopx/laptop.png"
   },
   {
     "count": 6,
@@ -16,10 +16,10 @@
     "id": 18,
     "isSelected": false,
     "menu_order": 0,
-    "name": "Women",
+    "name": "Phone",
     "parent": 16,
-    "slug": "women",
-    "image": "assets/images/shopx/ic_woman.png"
+    "slug": "PHONE",
+    "image": "assets/images/shopx/smartphone.png"
 
   },
   {
@@ -28,10 +28,10 @@
     "id": 53,
     "isSelected": false,
     "menu_order": 0,
-    "name": "Baby & Kids",
+    "name": "Tablet",
     "parent": 0,
-    "slug": "Kids",
-    "image": "assets/images/shopx/ic_kids.png"
+    "slug": "TABLET",
+    "image": "assets/images/shopx/tablet.png"
 
   },
   {
@@ -40,34 +40,9 @@
     "id": 19,
     "isSelected": false,
     "menu_order": 0,
-    "name": "Bags",
+    "name": "Camera",
     "parent": 0,
-    "slug": "Bags",
-    "image": "assets/images/shopx/ic_bag.png"
-
-  },
-  {
-    "count": 4,
-    "description": "",
-    "id": 21,
-    "isSelected": false,
-    "menu_order": 0,
-    "name": "Decor",
-    "parent": 45,
-    "slug": "decor",
-    "image": "assets/images/shopx/ic_decor.png"
-
-  },
-  {
-    "count": 1,
-    "description": "",
-    "id": 20,
-    "isSelected": false,
-    "menu_order": 0,
-    "name": "Sport",
-    "parent": 0,
-    "slug": "Sport",
-    "image": "assets/images/shopx/ic_sports.png"
-
+    "slug": "CAMERA",
+    "image": "assets/images/shopx/camera.png"
   }
 ]

@@ -1,3 +1,5 @@
+import 'package:ecommerce_responsive/utils/enum/product_category_enum.dart';
+
 class ModelCategory {
   int? count;
   String? description;
@@ -12,7 +14,16 @@ class ModelCategory {
   String? image;
 
   // ignore: non_constant_identifier_names
-  ModelCategory({this.count, this.description, this.id, this.isSelected, this.menu_order, this.name, this.parent, this.slug, this.image});
+  ModelCategory(
+      {this.count,
+      this.description,
+      this.id,
+      this.isSelected,
+      this.menu_order,
+      this.name,
+      this.parent,
+      this.slug,
+      this.image});
 
   factory ModelCategory.fromJson(Map<String, dynamic> json) {
     return ModelCategory(
@@ -38,5 +49,20 @@ class ModelCategory {
     data['parent'] = parent;
     data['slug'] = slug;
     return data;
+  }
+}
+
+extension ModelCategoryExtension on ModelCategory {
+  CategoryEnum getEnum() {
+    switch (slug) {
+      case "LAPTOP":
+        return CategoryEnum.laptop;
+      case "PHONE":
+        return CategoryEnum.smartphone;
+      case "TABLET":
+        return CategoryEnum.tablet;
+      default:
+        return CategoryEnum.camera;
+    }
   }
 }

@@ -1,17 +1,15 @@
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
 import 'package:ecommerce_responsive/main.dart';
 import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
-import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
-import 'package:ecommerce_responsive/utils/root_bundle.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
 import 'package:ecommerce_responsive/utils/strings_constant.dart';
 import 'package:ecommerce_responsive/utils/widgets/image_holder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
-
-import '../../models/model_product.dart';
 
 class CartItemV2 extends StatefulWidget {
   const CartItemV2({Key? key, required this.item}) : super(key: key);
@@ -129,30 +127,32 @@ class _CartItemV2State extends State<CartItemV2> {
                         ),
                       ),
                       Container(width: 1, color: sh_view_color, height: 35),
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () async {
-                            await removeProductFromCart(
-                                widget.item?.productId ?? "");
-                            setState(() {});
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.delete_outline,
-                                color: appStore.isDarkModeOn
-                                    ? gray
-                                    : sh_textColorPrimary,
-                                size: 16,
-                              ),
-                              4.width,
-                              (context.width() > 716 && context.width() < 780)
-                                  ? const SizedBox.shrink()
-                                  : Text(sh_lbl_remove,
-                                      style: secondaryTextStyle()),
-                            ],
+                      Expanded(
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<CartBloc>().add(
+                                  RemoveCartProductEvent(
+                                      productId: widget.item?.productId ?? ""));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.delete_outline,
+                                  color: appStore.isDarkModeOn
+                                      ? gray
+                                      : sh_textColorPrimary,
+                                  size: 16,
+                                ),
+                                4.width,
+                                (context.width() > 716 && context.width() < 780)
+                                    ? const SizedBox.shrink()
+                                    : Text(sh_lbl_remove,
+                                        style: secondaryTextStyle()),
+                              ],
+                            ),
                           ),
                         ),
                       )

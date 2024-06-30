@@ -1,10 +1,13 @@
 import 'package:ecommerce_responsive/api/product_api_impl.dart';
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
+import 'package:ecommerce_responsive/bloc/category/category_bloc.dart';
 import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/screens/side_drawer.dart';
 import 'package:ecommerce_responsive/utils/widgets/dots_indicator/src/dots_decorator.dart';
 import 'package:ecommerce_responsive/utils/widgets/dots_indicator/src/dots_indicator.dart';
 import 'package:ecommerce_responsive/utils/widgets/footer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:ecommerce_responsive/models/model_category.dart';
 import 'package:ecommerce_responsive/screens/screen_category.dart';
@@ -38,6 +41,7 @@ class ScreenHomeState extends State<ScreenHome> {
 
   @override
   void initState() {
+    context.read<CartBloc>().add(const GetCartProductsEvent());
     super.initState();
     fetchData();
   }
@@ -56,6 +60,7 @@ class ScreenHomeState extends State<ScreenHome> {
         await ApiIpml.productApi.getAllProducts() ?? [];
     List<ProductResponse> featured = [];
     featured = products.where((element) => element.featured ?? false).toList();
+
     /// banner
     List<String> banner = [];
     for (var i = 1; i < 7; i++) {
@@ -82,119 +87,158 @@ class ScreenHomeState extends State<ScreenHome> {
       body: newestProducts.isNotEmpty
           ? SafeArea(
               child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Stack(
-                      alignment: const Alignment(0.9, -0.9),
-                      children: [
-                        SizedBox(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                                maxHeight: 280, minWidth: 500),
-                            child:
-                                StatefulBuilder(builder: (context, setState) {
-                              return Stack(
-                                alignment: Alignment.bottomCenter,
-                                children: <Widget>[
-                                  PageView.builder(
-                                    itemCount: banners.length,
-                                    itemBuilder: (context, index) {
-                                      return Image.asset(banners[index],
-                                          fit: BoxFit.contain);
-                                    },
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        position = index;
-                                      });
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: DotsIndicator(
-                                      dotsCount: banners.length,
-                                      position: position,
-                                      decorator: const DotsDecorator(
-                                        color: sh_view_color,
-                                        activeColor: sh_colorPrimary,
-                                        size: Size.square(7.0),
-                                        activeSize: Size.square(10.0),
-                                        spacing: EdgeInsets.all(3),
-                                      ),
+                scrollDirection: Axis.vertical,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            // /Category list
+                            if (!context.isPhone())
+                              ListView.builder(
+                                itemCount: categoryList.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                padding: const EdgeInsets.only(
+                                    left: spacing_standard,
+                                    right: spacing_standard,
+                                    top: spacing_standard_new),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: const EdgeInsets.all(
+                                        spacing_standard * 2),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          padding: const EdgeInsets.all(
+                                              spacing_middle),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: colors[
+                                                  index % colors.length]),
+                                          child: Image.asset(
+                                              categoryList[index].image!,
+                                              width: 20,
+                                              color: sh_white),
+                                        ),
+                                        const SizedBox(height: spacing_control),
+                                        text(categoryList[index].name,
+                                            textColor:
+                                                colors[index % colors.length],
+                                            fontFamily: fontMedium,
+                                            fontSize: 15)
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
+                                  ).onTap(() {
+                                    MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider(
+                                          create: (context) => CategoryBloc()
+                                            ..add(GetProductsByCategoryEvent(
+                                                category: categoryList[index]
+                                                    .getEnum())),
+                                        ),
+                                      ],
+                                      child: ScreenCategory(
+                                          category: categoryList[index]),
+                                    ).launch(context);
+                                  });
+                                },
+                              ).withWidth(120),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: <Widget>[
+                                    Stack(
+                                      alignment: const Alignment(0.9, -0.9),
+                                      children: [
+                                        SizedBox(
+                                          child: ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                                maxHeight: 280, minWidth: 500),
+                                            child: StatefulBuilder(
+                                                builder: (context, setState) {
+                                              return Stack(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                children: <Widget>[
+                                                  PageView.builder(
+                                                    itemCount: banners.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Image.asset(
+                                                          banners[index],
+                                                          fit: BoxFit.contain);
+                                                    },
+                                                    onPageChanged: (index) {
+                                                      setState(() {
+                                                        position = index;
+                                                      });
+                                                    },
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: DotsIndicator(
+                                                      dotsCount: banners.length,
+                                                      position: position,
+                                                      decorator:
+                                                          const DotsDecorator(
+                                                        color: sh_view_color,
+                                                        activeColor:
+                                                            sh_colorPrimary,
+                                                        size: Size.square(7.0),
+                                                        activeSize:
+                                                            Size.square(10.0),
+                                                        spacing:
+                                                            EdgeInsets.all(3),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            }),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
 
-                    ///Category list
-                    if (!context.isPhone())
-                      Center(
-                        child: ListView.builder(
-                          itemCount: categoryList.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.only(
-                              left: spacing_standard,
-                              right: spacing_standard,
-                              top: spacing_standard_new),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              margin: const EdgeInsets.only(
-                                  left: spacing_standard,
-                                  right: spacing_standard),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.all(spacing_middle),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: colors[index % colors.length]),
-                                    child: Image.asset(
-                                        categoryList[index].image!,
-                                        width: 20,
-                                        color: sh_white),
-                                  ),
-                                  const SizedBox(height: spacing_control),
-                                  text(categoryList[index].name,
-                                      textColor: colors[index % colors.length],
-                                      fontFamily: fontMedium,
-                                      fontSize: 22)
-                                ],
+                                    ///Newest Product
+                                    horizontalHeadingV2(sh_lbl_newest_product,
+                                        callback: () {
+                                      ScreenViewAllProduct(
+                                              products: newestProducts,
+                                              title: sh_lbl_newest_product)
+                                          .launch(context);
+                                    }),
+                                    ProductHorizontalListV2(newestProducts),
+
+                                    const SizedBox(
+                                        height: spacing_standard_new),
+                                    horizontalHeadingV2(sh_lbl_Featured,
+                                        callback: () {
+                                      ScreenViewAllProduct(
+                                              products: featuredProducts,
+                                              title: sh_lbl_Featured)
+                                          .launch(context);
+                                    }),
+                                    ProductHorizontalListV2(featuredProducts),
+                                    const SizedBox(height: 60),
+                                  ],
+                                ),
                               ),
-                            ).onTap(() {
-                              ScreenCategory(category: categoryList[index])
-                                  .launch(context);
-                            });
-                          },
+                            ),
+                          ],
                         ),
-                      ).withHeight(100),
-
-                    ///Newest Product
-                    horizontalHeadingV2(sh_lbl_newest_product, callback: () {
-                      ScreenViewAllProduct(
-                              products: newestProducts,
-                              title: sh_lbl_newest_product)
-                          .launch(context);
-                    }),
-                    ProductHorizontalListV2(newestProducts),
-
-                    const SizedBox(height: spacing_standard_new),
-                    horizontalHeadingV2(sh_lbl_Featured, callback: () {
-                      ScreenViewAllProduct(
-                              products: featuredProducts,
-                              title: sh_lbl_Featured)
-                          .launch(context);
-                    }),
-                    ProductHorizontalListV2(featuredProducts),
-                    const SizedBox(height: 60),
-
-                    const Footer()
-                  ],
+                      ),
+                      const Footer(),
+                    ],
+                  ),
                 ),
               ),
             )

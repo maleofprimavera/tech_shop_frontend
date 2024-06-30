@@ -1,20 +1,10 @@
-
+import 'package:ecommerce_responsive/bloc/cart_bloc/bloc/cart_bloc.dart';
+import 'package:ecommerce_responsive/models/product_response.dart';
 import 'package:ecommerce_responsive/screens/screen_cart.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
-import 'package:ecommerce_responsive/utils/widgets/cart_item.dart';
-import 'package:ecommerce_responsive/utils/widgets/material_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:ecommerce_responsive/models/model_address.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
-import 'package:ecommerce_responsive/screens/screen_address_manager.dart';
-import 'package:ecommerce_responsive/screens/screen_payments_screen.dart';
-import 'package:ecommerce_responsive/utils/colors_constant.dart';
-import 'package:ecommerce_responsive/utils/size_constant.dart';
-import 'package:ecommerce_responsive/utils/root_bundle.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce_responsive/utils/strings_constant.dart';
-import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 
 class ScreenOrderSummary extends StatefulWidget {
   static const String tag = '/orderSummary';
@@ -26,49 +16,15 @@ class ScreenOrderSummary extends StatefulWidget {
 }
 
 class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
-  List<ModelProduct> orderList = [];
-  // List<ModelAddress> addressList = [];
-  var selectedPosition = 0;
-  var currentIndex = 0;
-  var isLoaded = false;
-
+  List<ProductResponse>? orderList = [];
   @override
   void initState() {
+        context.read<CartBloc>().add(const GetCartProductsEvent());
     super.initState();
-    fetchData();
-  }
-
-  fetchData() async {
-    var products = await loadCartProducts();
-    // var addresses = await loadAddresses();
-
-    setState(() {
-      orderList.clear();
-      orderList.addAll(products);
-      // addressList.clear();
-      // addressList.addAll(addresses);
-      isLoaded = true;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    var cartList = isLoaded
-        ? ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: orderList.length,
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(bottom: spacing_standard_new),
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return CartItem(item:orderList[index]);
-              }),
-        )
-        : Container();
-
     ///todo: remove address box for now
     // var address = addressList.isNotEmpty?
     // Card(
@@ -107,61 +63,35 @@ class ScreenOrderSummaryState extends State<ScreenOrderSummary> {
     //     ),
     //   ),
     // ): const SizedBox.shrink();
-    var bottomButtons = Container(
-      height: 60,
-      decoration: const BoxDecoration(boxShadow: [BoxShadow(color: sh_shadow_color, blurRadius: 10, spreadRadius: 2, offset: Offset(0, 3))], color: sh_white),
-      child: Row(
-        children: <Widget>[
-          Container(
-            color: context.cardColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("\$70", style: boldTextStyle()),
-                4.height,
-                Text(sh_lbl_see_price_detail, style: secondaryTextStyle()),
-              ],
-            ),
-          ).expand(),
-          Container(
-            color: sh_colorPrimary,
-            alignment: Alignment.center,
-            height: double.infinity,
-            child: text(sh_lbl_continue, textColor: sh_white, fontSize: textSizeLargeMedium, fontFamily: fontMedium),
-          ).onTap(() {
-            ///todo: remove for now
-            // Get.toNamed(ScreenPayments.tag);
-          }).expand()
-        ],
-      ),
-    );
     return Scaffold(
       appBar: const DefaultAppBar(title: sh_order_summary),
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 70.0),
-                child: Column(
-                  children: <Widget>[
-                    // isLoaded && !context.isDesktop()? address : const SizedBox.shrink(),
-                    // Wrap(
-                    //   children: [
-                    //     cartList,
-                    //     isLoaded && context.isDesktop()? address : const SizedBox.shrink(),
-                    //   ],
-                    // ),
-                    ScreenCartState.paymentDetail,
-                  ],
+      body: BlocBuilder<CartBloc, CartState>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          if (state.loadStatus != LoadStatus.success) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return SafeArea(
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: <Widget>[
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 70.0),
+                    child: Column(
+                      children: <Widget>[
+                        ScreenCartState.paymentDetail(
+                            context.read<CartBloc>().state.cartProducts),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            Container(color: sh_white, child: bottomButtons)
-          ],
-        ),
+          );
+        },
       ),
     );
   }

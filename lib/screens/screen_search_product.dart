@@ -1,6 +1,4 @@
 import 'package:ecommerce_responsive/models/product_response.dart';
-import 'package:ecommerce_responsive/utils/extension/url_extension.dart';
-import 'package:ecommerce_responsive/utils/images_constant.dart';
 import 'package:ecommerce_responsive/utils/extension/currency_extension.dart';
 import 'package:ecommerce_responsive/utils/widgets/app_widget.dart';
 import 'package:ecommerce_responsive/utils/widgets/appbar.dart';
@@ -9,13 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:nb_utils/nb_utils.dart';
-import 'package:ecommerce_responsive/models/model_product.dart';
 import 'package:ecommerce_responsive/utils/colors_constant.dart';
 import 'package:ecommerce_responsive/utils/size_constant.dart';
 import 'package:ecommerce_responsive/utils/root_bundle.dart';
 import 'package:ecommerce_responsive/utils/common_widget.dart';
 import 'package:ecommerce_responsive/main.dart';
-import 'package:ecommerce_responsive/utils/widgets/flutter_rating_bar.dart';
 
 import 'screen_product_detail.dart';
 
@@ -74,8 +70,9 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                 for (var index = 0; index < resultList.length; index++)
                   InkWell(
                     onTap: () {
-                      Get.toNamed(ScreenProductDetail.tag,
-                          parameters: resultList[index].toJson().encode);
+                      Get.toNamed(ScreenProductDetail.tag, parameters: {
+                        "productId": resultList[index].productId ?? ""
+                      });
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10.0),
@@ -103,6 +100,7 @@ class ScreenSearchProductState extends State<ScreenSearchProduct> {
                                                 .salePrice
                                                 .toString()
                                                 .toCurrencyFormat()
+                                            // ignore: dead_code
                                             : resultList[index]
                                                 .price
                                                 .toString()

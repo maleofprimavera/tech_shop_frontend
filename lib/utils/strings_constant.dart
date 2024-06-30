@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, unnecessary_string_escapes
+
 const sh_app_name = "Watch";
 const sh_lbl_sign_in = " Sign In";
 const sh_lbl_sign_up = "Sign Up";
